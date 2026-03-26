@@ -9,7 +9,9 @@ const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
 
 let app: App;
 
-if (getApps().length === 0) {
+const apps = getApps() || [];
+
+if (apps.length === 0) {
   if (serviceAccountKey) {
     const serviceAccount = JSON.parse(serviceAccountKey);
     app = initializeApp({
