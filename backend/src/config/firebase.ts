@@ -1,24 +1,27 @@
-import admin from 'firebase-admin';
+import { initializeApp, cert, getApps, getApp, type App } from 'firebase-admin/app';
+import { getFirestore, type Firestore } from 'firebase-admin/firestore';
+import { getAuth, type Auth } from 'firebase-admin/auth';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
-// Initialize Firebase Admin with credentials securely stored in environment variables
-// Ensure GOOGLE_APPLICATION_CREDENTIALS points to the service account JSON
-// or parse it from an env var string if hosted on Vercel
 const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
 
-if (!admin.apps.length) {
+let app: App;
+
+if (getApps().length === 0) {
   if (serviceAccountKey) {
     const serviceAccount = JSON.parse(serviceAccountKey);
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount)
+    app = initializeApp({
+      credential: cert(serviceAccount)
     });
   } else {
-    // Fallback to application default credentials
-    admin.initializeApp();
+    app = initializeApp();
   }
+} else {
+  app = getApp();
 }
 
-export const db: admin.firestore.Firestore = admin.firestore();
-export const auth: admin.auth.Auth = admin.auth();
-export default admin;
+export const db: Firestore = getFirestore(app);
+export const auth: Auth = getAuth(app);
+export default app;
