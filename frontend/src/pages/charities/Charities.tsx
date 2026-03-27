@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { 
   Heart, 
   CheckCircle2, 
@@ -93,14 +94,22 @@ const Charities: React.FC = () => {
                </div>
                <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-4">{featured.name}</h2>
                <p className="text-sm font-medium italic opacity-80 leading-relaxed mb-10 max-w-md">{featured.description}</p>
-               <button 
-                 onClick={() => handleSelect(featured.id)}
-                 className="flex items-center gap-4 py-4 px-8 bg-[#fed65b] text-[#002819] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg hover:scale-105 transition-all italic"
-               >
-                  {selectedCharity === featured.id ? 'Currently Supporting' : 'Set as My Impact Target'}
-                  <ArrowRight size={14} />
-               </button>
-            </div>
+                <div className="flex flex-wrap gap-4">
+                  <Link 
+                    to={`/charity/${featured.id}`}
+                    className="flex items-center gap-4 py-4 px-8 bg-white/10 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white/20 transition-all italic border border-white/20"
+                  >
+                     View Narrative
+                     <ArrowRight size={14} />
+                  </Link>
+                  <button 
+                    onClick={() => handleSelect(featured.id)}
+                    className="flex items-center gap-4 py-4 px-8 bg-[#fed65b] text-[#002819] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg hover:scale-105 transition-all italic"
+                  >
+                     {selectedCharity === featured.id ? 'Currently Supporting' : 'Set as Impact Target'}
+                  </button>
+                </div>
+             </div>
             <Sparkles size={160} className="absolute -bottom-20 -right-20 text-white/5 rotate-12 group-hover:rotate-45 transition-transform duration-1000" />
           </motion.div>
         )}
@@ -136,6 +145,17 @@ const Charities: React.FC = () => {
                     My Priority
                  </div>
                )}
+               
+               <div className="absolute bottom-4 right-6 flex items-center gap-2">
+                  <Link
+                     to={`/charity/${charity.id}`}
+                     className="p-3 bg-white/20 hover:bg-primary/80 backdrop-blur-md rounded-xl border border-white/20 text-white transition-all group/info flex items-center gap-2"
+                     title="View Profile"
+                  >
+                     <span className="text-[9px] font-black uppercase tracking-widest hidden group-hover/info:block">Explore</span>
+                     <ArrowRight size={16} className="group-hover/info:translate-x-1 transition-transform" />
+                  </Link>
+               </div>
                
                <div className="absolute bottom-4 left-6 flex items-center gap-2">
                   <div className="p-2 bg-white/20 backdrop-blur-md rounded-lg border border-white/20 text-white">

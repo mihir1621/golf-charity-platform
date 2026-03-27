@@ -2,24 +2,68 @@ import type { Request, Response } from 'express';
 import { db } from '../config/firebase.js';
 import stripe from '../config/stripe.js';
 import type { AuthRequest } from '../middleware/authMiddleware.js';
+import { createNotification } from './notificationController.js';
 
 export const createSubscription = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const uid = req.user?.uid;
-    const { planType } = req.body; // 'monthly' or 'yearly'
+    const { planType } = req.body; // 'member', 'elite', 'masters', 'monthly', or 'yearly'
 
     const userDoc = await db.collection('users').doc(uid!).get();
-    const userData = userDoc.data();
+    let userData = userDoc.data();
 
-    if (!userData || !userData.stripeCustomerId) {
-      res.status(400).json({ error: 'User missing Stripe Customer ID' });
-      return;
+    // Recover profile if Auth user exists but Firestore doc is missing
+    if (!userData) {
+      console.log(`Profile Recovery: Reconstructing ghost user record for uid ${uid}`);
+      userData = {
+        uid: uid!,
+        email: req.user?.email || '',
+        displayName: 'Clubhouse Member',
+        charityId: 'default_impact', // Placeholder for broken profiles
+        charityContributionPercent: 20,
+        subscriptionStatus: 'expired',
+        role: 'user',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      await db.collection('users').doc(uid!).set(userData);
     }
 
-    const priceId = planType === 'monthly' ? process.env.STRIPE_MONTHLY_PRICE_ID : process.env.STRIPE_YEARLY_PRICE_ID;
+    // Auto-repair for old accounts missing Stripe Customer ID
+    if (!userData.stripeCustomerId) {
+      console.log(`Auto-repair: Creating Stripe Customer for existing user ${uid}`);
+      try {
+        const customer = await stripe.customers.create({
+          email: userData.email,
+          name: userData.displayName,
+          metadata: { uid: uid! }
+        });
+        
+        await db.collection('users').doc(uid!).update({
+          stripeCustomerId: customer.id,
+          updatedAt: new Date()
+        });
+        
+        userData.stripeCustomerId = customer.id;
+      } catch (stripeErr: any) {
+        console.error('Auto-repair failed:', stripeErr);
+        res.status(500).json({ error: 'Failed to initialize Stripe customer identity' });
+        return;
+      }
+    }
+
+    let priceId = '';
+    // ... plan logic remains same 
+    // Wait, I'll just keep the existing IDs
+    if (planType === 'member') priceId = process.env.STRIPE_PRICE_MEMBER || '';
+    else if (planType === 'elite') priceId = process.env.STRIPE_PRICE_ELITE || '';
+    else if (planType === 'masters') priceId = process.env.STRIPE_PRICE_MASTERS || '';
+    else if (planType === 'monthly') priceId = process.env.STRIPE_PRICE_MONTHLY || '';
+    else if (planType === 'yearly') priceId = process.env.STRIPE_PRICE_YEARLY || '';
 
     if (!priceId) {
-      res.status(500).json({ error: 'Stripe configuration error' });
+      console.error(`Subscription failed: No Stripe Price ID found in .env for tier: ${planType}`);
+      res.status(500).json({ error: `Stripe configuration error: Tier ${planType} is not mapped to a Price ID.` });
       return;
     }
 
@@ -34,13 +78,19 @@ export const createSubscription = async (req: AuthRequest, res: Response): Promi
           quantity: 1,
         },
       ],
-      success_url: `${process.env.FRONTEND_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.FRONTEND_URL}/subscribe`,
+      metadata: { planType, uid: userData.uid }
     });
 
     res.status(200).json({ checkoutUrl: session.url });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error('CRITICAL: Checkout Session Failure:', error);
+    res.status(500).json({ 
+      error: error.message,
+      code: error.code || 'checkout_failed_internal',
+      details: 'Check backend console logs for full stack trace.'
+    });
   }
 };
 
@@ -112,5 +162,79 @@ export const handleStripeWebhook = async (req: Request, res: Response): Promise<
     res.json({ received: true });
   } catch (err: any) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+export const verifySession = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { sessionId } = req.query;
+    if (!sessionId) {
+      res.status(400).json({ error: 'Missing sessionId' });
+      return;
+    }
+
+    const session = await stripe.checkout.sessions.retrieve(sessionId as string);
+    if (session.payment_status === 'paid') {
+      const uid = req.user?.uid;
+
+      // Ensure a subscription record exists in the billing ledger
+      const existing = await db.collection('subscriptions')
+        .where('stripeSessionId', '==', sessionId)
+        .get();
+      
+      if (existing.empty) {
+        await db.collection('subscriptions').add({
+          userId: uid,
+          stripeSessionId: sessionId,
+          status: 'active',
+          planType: session.metadata?.planType || 'monthly',
+          amount: (session.amount_total || 0) / 100,
+          createdAt: new Date()
+        });
+      }
+
+      await db.collection('users').doc(uid!).update({
+        subscriptionStatus: 'active',
+        updatedAt: new Date()
+      });
+
+      // Notify the user of their new membership status
+      await createNotification(
+        uid!, 
+        'membership', 
+        'Membership Active', 
+        `Welcome to the Digital Clubhouse! Your ${session.metadata?.planType || 'monthly'} plan is now active.`
+      );
+
+      res.status(200).json({ status: 'active' });
+    } else {
+      res.status(200).json({ status: session.payment_status });
+    }
+  } catch (error: any) {
+    console.error('Session Verification error:', error);
+      res.status(500).json({ error: error.message });
+  }
+};
+
+export const createPortalSession = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const uid = req.user?.uid;
+    const userDoc = await db.collection('users').doc(uid!).get();
+    const userData = userDoc.data();
+
+    if (!userData?.stripeCustomerId) {
+      res.status(400).json({ error: 'No active Stripe customer found for this account.' });
+      return;
+    }
+
+    const session = await stripe.billingPortal.sessions.create({
+      customer: userData.stripeCustomerId,
+      return_url: `${process.env.FRONTEND_URL}/billing`,
+    });
+
+    res.status(200).json({ url: session.url });
+  } catch (error: any) {
+    console.error('Portal session creation failed:', error);
+    res.status(500).json({ error: error.message });
   }
 };

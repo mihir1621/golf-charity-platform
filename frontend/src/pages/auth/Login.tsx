@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../config/firebase';
+import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Loader2, Mail, Lock, Eye, EyeOff, Trophy } from 'lucide-react';
@@ -14,7 +15,14 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,13 +135,13 @@ const Login: React.FC = () => {
                   <div className="relative group">
                     <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" size={18} />
                     <input
-                      className="w-full pl-13 pr-5 py-4 bg-transparent border-b-2 border-black/[0.08] focus:border-primary text-[#002819] placeholder:text-on-surface-variant/35 outline-none font-medium text-sm transition-colors"
                       id="email"
                       required
                       placeholder="name@fairwayfund.org"
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      className="w-full pl-13 pr-5 py-4 bg-transparent border-b-2 border-black/[0.08] focus:border-primary text-[#002819] placeholder:text-on-surface-variant/70 outline-none font-medium text-sm transition-colors"
                     />
                   </div>
                 </div>

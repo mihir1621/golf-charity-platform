@@ -309,7 +309,7 @@ const Scores: React.FC = () => {
 
       {/* Mobile Floating Action Button */}
       <button 
-        onClick={() => navigate('/scores/new')}
+        onClick={() => navigate('/scores')}
         className="fixed lg:hidden bottom-8 right-8 w-16 h-16 bg-[#fed65b] text-[#002819] rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50"
       >
         <PlusCircle size={28} />

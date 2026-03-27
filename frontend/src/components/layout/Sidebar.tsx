@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   BarChart3, 
@@ -12,6 +12,10 @@ import {
   Bell,
   Leaf,
   Medal,
+  Dice5,
+  Settings,
+  HelpCircle,
+  LogOut,
   X 
 } from 'lucide-react';
 import { useSidebar } from '../../context/SidebarContext';
@@ -19,9 +23,11 @@ import { useAuth } from '../../context/AuthContext';
 
 const Sidebar: React.FC = () => {
   const { isSidebarOpen, closeSidebar } = useSidebar();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const isAdminPath = location.pathname.startsWith('/admin');
 
   // Close sidebar on click outside
   useEffect(() => {
@@ -36,18 +42,32 @@ const Sidebar: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isSidebarOpen, closeSidebar]);
 
-  const navItems = [
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+    closeSidebar();
+  };
+
+  const navItems = isAdminPath ? [
+    { name: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/admin', active: location.pathname === '/admin' },
+    { name: 'Draw Simulator', icon: <Dice5 size={20} />, path: '/admin/draw-simulator', active: location.pathname === '/admin/draw-simulator' },
+    { name: 'Verification', icon: <ShieldAlert size={20} />, path: '/admin/verification', active: location.pathname === '/admin/verification' },
+    { name: 'Charity Partners', icon: <Heart size={20} />, path: '/admin/charity-partners', active: location.pathname === '/admin/charity-partners' },
+    { name: 'Settings', icon: <Settings size={20} />, path: '/admin/settings', active: location.pathname === '/admin/settings' },
+  ] : [
     { name: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/dashboard', active: location.pathname === '/dashboard' },
+    { name: 'Draw Simulator', icon: <Dice5 size={20} />, path: '/draw-simulator', active: location.pathname === '/draw-simulator' },
+    { name: 'Verification', icon: <ShieldAlert size={20} />, path: '/verification', active: location.pathname === '/verification' || location.pathname === '/winner-proof' },
     { name: 'Impact', icon: <Leaf size={20} />, path: '/impact', active: location.pathname === '/impact' },
     { name: 'Scores', icon: <BarChart3 size={20} />, path: '/scores', active: location.pathname === '/scores' },
     { name: 'Leaderboard', icon: <Medal size={20} />, path: '/leaderboard', active: location.pathname === '/leaderboard' },
     { name: 'Draws', icon: <Trophy size={20} />, path: '/draws', active: location.pathname === '/draws' },
-    { name: 'Subscription', icon: <Wallet size={20} />, path: '/subscribe', active: location.pathname === '/subscribe' },
+    { name: 'Billing', icon: <Wallet size={20} />, path: '/billing', active: location.pathname === '/billing' },
+    { name: 'Subscription', icon: <Gift size={20} />, path: '/subscribe', active: location.pathname === '/subscribe' },
     { name: 'Charity', icon: <Heart size={20} />, path: '/charities', active: location.pathname === '/charities' },
     { name: 'Perks', icon: <Gift size={20} />, path: '/perks', active: location.pathname === '/perks' },
     { name: 'Notifications', icon: <Bell size={20} />, path: '/notifications', active: location.pathname === '/notifications' },
     { name: 'Profile', icon: <UserIcon size={20} />, path: '/profile', active: location.pathname === '/profile' },
-    { name: 'Admin', icon: <ShieldAlert size={20} />, path: '/admin', active: location.pathname === '/admin' },
   ];
 
   if (!user) return null;
@@ -69,7 +89,7 @@ const Sidebar: React.FC = () => {
             onClick={closeSidebar}
             className="text-xl font-black tracking-tighter text-primary uppercase italic"
           >
-            Digital <span className="text-secondary underline underline-offset-4 decoration-2">Clubhouse</span>
+            {isAdminPath ? 'Admin' : 'Digital'} <span className="text-secondary underline underline-offset-4 decoration-2">Clubhouse</span>
           </Link>
           <button 
             onClick={closeSidebar}
@@ -84,7 +104,7 @@ const Sidebar: React.FC = () => {
           <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">Premium Access</span>
         </div>
 
-        <nav className="space-y-1 flex-grow">
+        <nav className="space-y-1 flex-grow overflow-y-auto pr-2 custom-scrollbar">
           {navItems.map((item) => (
             <Link
               key={item.name}
@@ -102,15 +122,29 @@ const Sidebar: React.FC = () => {
           ))}
         </nav>
 
-        <div className="mt-auto">
+        <div className="mt-auto space-y-4 pt-8 border-t border-outline-variant/10">
           <Link
-            to="/subscribe"
-            onClick={() => { if (window.innerWidth < 1024) closeSidebar(); }}
-            className="w-full bg-secondary-container text-on-secondary-container py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg hover:shadow-secondary/20 transition-all flex items-center justify-center gap-2 active:scale-95 italic"
+            to="/support"
+            className="flex items-center gap-4 px-6 py-4 rounded-2xl text-on-surface-variant hover:bg-surface-container-high font-medium transition-all"
           >
-            <Trophy size={16} fill="currentColor" />
-            Join the Fund
+            <HelpCircle size={20} />
+            <span className="text-sm">Support</span>
           </Link>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-error hover:bg-error/5 font-medium transition-all"
+          >
+            <LogOut size={20} />
+            <span className="text-sm">Logout</span>
+          </button>
+          {isAdminPath && (
+            <button 
+              onClick={() => navigate('/admin/draw-simulator')}
+              className="w-full bg-[#fed65b] text-[#002819] py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg hover:scale-[1.02] transition-all flex items-center justify-center gap-2 italic"
+            >
+               Simulate Draw
+            </button>
+          )}
         </div>
       </aside>
     </>

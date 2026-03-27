@@ -16,37 +16,49 @@ import PageTransition from '../../components/animations/PageTransition';
 
 const plans = [
   {
-    id: 'monthly',
-    name: 'Impact Pioneer',
-    price: '$9.99',
+    id: 'member',
+    name: 'Member',
+    price: '$29',
     period: '/ month',
-    description: 'Perfect for golfers getting started with high-impact play.',
+    description: 'Perfect for golfers getting started with impact play.',
     features: [
-      'Enter up to 5 qualifying rounds',
-      'Entry into Monthly Prize Draw',
-      'Support any listed charity (10%+ share)',
-      'Basic Impact Analytics',
-      'Exclusive Community Access'
+      '1 Monthly Draw Entry',
+      'Basic Score Tracking',
+      'Clubhouse Access',
+      'Partner Discounts'
     ],
     color: 'primary'
   },
   {
-    id: 'yearly',
-    name: 'Charity Champion',
-    price: '$99',
-    period: '/ year',
-    description: 'The ultimate dedication. Maximize your rewards and impact.',
+    id: 'elite',
+    name: 'Elite',
+    price: '$79',
+    period: '/ month',
+    description: 'The definitive clubhouse experience for active competitors.',
     features: [
-      'Enter ALL qualifying rounds',
-      'Entry into Monthly Prize Draw',
-      'Support any listed charity (20%+ share)',
-      'Advanced Impact Analytics Portfolio',
-      'Priority Draw Notifications',
-      'Premium Profile Badge',
-      'Get 2 Months Free'
+      '5 Monthly Draw Entries',
+      'Advanced Impact Analytics',
+      'Priority Support',
+      'Exclusive Perks Access',
+      'Monthly Member Pack'
     ],
     featured: true,
     color: 'secondary'
+  },
+  {
+    id: 'masters',
+    name: 'Masters',
+    price: '$199',
+    period: '/ month',
+    description: 'The pinnacle of philanthropy and prestige on the course.',
+    features: [
+      'Unlimited Prize Draw Entries',
+      'Personal Concierge Service',
+      'VIP Event Invitations',
+      'Quarterly Apparel Box',
+      'White-Glove Support'
+    ],
+    color: 'primary'
   }
 ];
 
@@ -61,9 +73,10 @@ const Subscribe: React.FC = () => {
       if (response.data.checkoutUrl) {
         window.location.href = response.data.checkoutUrl;
       }
-    } catch (error) {
-      console.error('Subscription error:', error);
-      alert('Subscription failed. Please contact support.');
+    } catch (err: any) {
+      console.error('Subscription error:', err);
+      const errorMessage = err.response?.data?.error || 'Subscription failed. Please check your connection or contact support.';
+      alert(errorMessage);
     } finally {
       setLoading(null);
     }
@@ -108,7 +121,7 @@ const Subscribe: React.FC = () => {
       </div>
 
       {/* Plans Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10 max-w-[85rem] mx-auto">
         {plans.map((plan) => (
           <motion.div 
             key={plan.id}

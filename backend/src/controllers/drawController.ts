@@ -1,10 +1,14 @@
 import type { Response } from 'express';
 import { db } from '../config/firebase.js';
 import type { AuthRequest } from '../middleware/authMiddleware.js';
+import { createNotification } from './notificationController.js';
 
 export const runDraw = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { monthYear, isSimulation } = req.body;
+    const { 
+      monthYear = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }), 
+      isSimulation = false 
+    } = req.body || {};
     
     // 1. Admin Authorization check
     const uid = req.user?.uid;
@@ -119,10 +123,19 @@ export const runDraw = async (req: AuthRequest, res: Response): Promise<void> =>
       await statsRef.set({ rolloverAmount: nextRollover }, { merge: true });
 
       const batch = db.batch();
-      drawResults.forEach(resItem => {
+      // Use for...of to handle await inside loop correctly for notifications
+      for (const resItem of drawResults) {
         const docRef = db.collection('results').doc();
         batch.set(docRef, { ...resItem, drawId: drawRef.id });
-      });
+        
+        // Notify the winner
+        await createNotification(
+          resItem.userId,
+          'draw',
+          'You Won a Prize!',
+          `Congratulations! You matched scores in the ${monthYear} draw and won £${resItem.prizeAmount}.`
+        );
+      }
       await batch.commit();
 
       res.status(200).json({ 

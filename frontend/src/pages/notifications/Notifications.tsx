@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Trophy, 
@@ -6,101 +7,93 @@ import {
   Lock, 
   Megaphone,
   Settings,
-  CheckCheck
+  CheckCheck,
+  Loader2,
+  Inbox
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../../api/apiClient';
 import PageTransition from '../../components/animations/PageTransition';
 
 interface NotificationItem {
-  icon: React.ReactNode;
-  iconBg: string;
+  id: string;
+  type: 'draw' | 'impact' | 'membership' | 'general';
   title: string;
   description: string;
-  time: string;
-  badges?: { label: string; variant: 'green' | 'dark' }[];
-  unread?: boolean;
-}
-
-interface NotificationSection {
-  category: string;
-  accentColor: string;
-  items: NotificationItem[];
+  unread: boolean;
+  createdAt: any;
 }
 
 const Notifications = () => {
   const navigate = useNavigate();
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const sections: NotificationSection[] = [
-    {
-      category: 'Draw Results',
-      accentColor: 'bg-[#fed65b]',
-      items: [
-        {
-          icon: <Trophy size={18} className="text-[#c9a820]" />,
-          iconBg: 'bg-[#fed65b]/15',
-          title: 'Quarterly Founders Draw',
-          description: "Congratulations! You've secured a spot in the Top 50 participants for the Summer Gala. Check your dash for details.",
-          time: '2h ago',
-          badges: [
-            { label: 'Winner', variant: 'green' },
-            { label: 'Founder Tier', variant: 'dark' },
-          ],
-        },
-      ],
-    },
-    {
-      category: 'Impact Alerts',
-      accentColor: 'bg-[#002819]',
-      items: [
-        {
-          icon: <TreePine size={18} className="text-primary" />,
-          iconBg: 'bg-primary/10',
-          title: 'Forest Restoration Project',
-          description: 'Your contributions helped plant over 500 indigenous trees this month. View the project gallery now.',
-          time: 'Yesterday',
-          unread: true,
-        },
-      ],
-    },
-    {
-      category: 'Membership Updates',
-      accentColor: 'bg-on-surface-variant/20',
-      items: [
-        {
-          icon: <Award size={18} className="text-[#c9a820]" />,
-          iconBg: 'bg-[#fed65b]/10',
-          title: 'Tier Upgrade Available',
-          description: "You're only $250 away from reaching 'Elite Clubhouse' status. Unlock new perks today.",
-          time: '3 days ago',
-        },
-        {
-          icon: <Lock size={18} className="text-on-surface-variant/50" />,
-          iconBg: 'bg-surface-container-high',
-          title: 'Security Notice',
-          description: "A new login was detected from London, UK. If this wasn't you, please reset your password.",
-          time: 'Last week',
-        },
-      ],
-    },
-    {
-      category: 'General',
-      accentColor: 'bg-on-surface-variant/20',
-      items: [
-        {
-          icon: <Megaphone size={18} className="text-on-surface-variant/50" />,
-          iconBg: 'bg-surface-container-high',
-          title: 'Digital Clubhouse v2.0',
-          description: "We've updated our interface to provide a smoother, faster experience for all members.",
-          time: 'Oct 12',
-        },
-      ],
-    },
-  ];
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const res = await apiClient.get('/notifications');
+      setNotifications(res.data);
+    } catch (err) {
+      console.error('Failed to fetch notifications:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const markAllRead = async () => {
+    try {
+      await apiClient.post('/notifications/read-all');
+      setNotifications(prev => prev.map(n => ({ ...n, unread: false })));
+    } catch (err) {
+      console.error('Failed to mark all as read:', err);
+    }
+  };
+
+  const markAsRead = async (id: string) => {
+    try {
+      await apiClient.patch(`/notifications/${id}/read`);
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, unread: false } : n));
+    } catch (err) {
+      console.error('Failed to mark as read:', err);
+    }
+  };
+
+  const getIcon = (type: string) => {
+    switch (type) {
+      case 'draw': return { icon: <Trophy size={18} className="text-[#c9a820]" />, bg: 'bg-[#fed65b]/15' };
+      case 'impact': return { icon: <TreePine size={18} className="text-primary" />, bg: 'bg-primary/10' };
+      case 'membership': return { icon: <Award size={18} className="text-[#c9a820]" />, bg: 'bg-[#fed65b]/10' };
+      case 'general': default: return { icon: <Megaphone size={18} className="text-on-surface-variant/50" />, bg: 'bg-surface-container-high' };
+    }
+  };
+
+  const getTimeAgo = (date: any) => {
+    if (!date) return '';
+    const d = new Date(date._seconds * 1000 || date);
+    const now = new Date();
+    const diff = now.getTime() - d.getTime();
+    
+    const minutes = Math.floor(diff / 60000);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days}d ago`;
+    return d.toLocaleDateString();
+  };
+
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <Loader2 className="animate-spin text-primary" size={48} />
+    </div>
+  );
 
   return (
     <PageTransition className="p-6 lg:p-10 max-w-4xl mx-auto space-y-10">
-
-      {/* Page Header */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
@@ -113,7 +106,10 @@ const Notifications = () => {
           </p>
         </div>
         <div className="flex gap-3 flex-shrink-0">
-          <button className="px-6 py-3.5 border border-black/[0.08] rounded-xl text-xs font-bold text-[#002819] hover:bg-[#f5f5f5] transition-colors flex items-center gap-2">
+          <button 
+            onClick={markAllRead}
+            className="px-6 py-3.5 border border-black/[0.08] rounded-xl text-xs font-bold text-[#002819] hover:bg-[#f5f5f5] transition-colors flex items-center gap-2"
+          >
             <CheckCheck size={15} />
             Mark all as read
           </button>
@@ -122,87 +118,50 @@ const Notifications = () => {
             className="px-6 py-3.5 bg-[#002819] text-white rounded-xl text-xs font-bold hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 shadow-lg"
           >
             <Settings size={15} />
-            Notification Settings
+            Settings
           </button>
         </div>
       </motion.div>
 
-      {/* Notification Sections */}
-      <div className="space-y-10">
-        {sections.map((section, si) => (
-          <motion.section
-            key={section.category}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: si * 0.08 }}
-            className="space-y-4"
-          >
-            {/* Section Header */}
-            <div className="flex items-center gap-3">
-              <div className={`w-6 h-[3px] rounded-full ${section.accentColor}`}></div>
-              <h3 className="text-[10px] font-black text-[#002819] uppercase tracking-[0.25em]">
-                {section.category}
-              </h3>
-            </div>
-
-            {/* Notification Items */}
-            <div className="space-y-3">
-              {section.items.map((item, ii) => (
-                <div
-                  key={ii}
-                  className={`bg-white rounded-2xl p-6 border border-black/[0.03] shadow-[0_8px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.04)] transition-shadow cursor-pointer group relative ${
-                    si === 0 && ii === 0 ? 'border-l-4 border-l-[#fed65b]' : ''
-                  } ${
-                    item.unread ? 'border-l-4 border-l-[#002819]' : ''
-                  }`}
-                >
-                  <div className="flex gap-5">
-                    {/* Icon */}
-                    <div className={`w-11 h-11 rounded-xl ${item.iconBg} flex items-center justify-center flex-shrink-0`}>
-                      {item.icon}
+      <div className="space-y-4">
+        {notifications.length > 0 ? (
+          notifications.map((notif) => {
+            const { icon, bg } = getIcon(notif.type);
+            return (
+              <motion.div
+                key={notif.id}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                onClick={() => markAsRead(notif.id)}
+                className={`bg-white rounded-2xl p-6 border border-black/[0.03] shadow-sm hover:shadow-md transition-all cursor-pointer group relative ${
+                  notif.unread ? 'border-l-4 border-l-primary bg-primary/[0.01]' : ''
+                }`}
+              >
+                <div className="flex gap-5">
+                  <div className={`w-11 h-11 rounded-xl ${bg} flex items-center justify-center flex-shrink-0`}>
+                    {icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start gap-4 mb-2">
+                       <h4 className={`text-sm font-bold ${notif.unread ? 'text-primary' : 'text-[#002819]'}`}>
+                        {notif.title}
+                       </h4>
+                       <span className="text-[11px] font-medium text-on-surface-variant/60">{getTimeAgo(notif.createdAt)}</span>
                     </div>
-
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start gap-4 mb-1.5">
-                        <h4 className="text-sm font-bold text-[#002819] group-hover:text-primary transition-colors">
-                          {item.title}
-                        </h4>
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          <span className="text-[11px] font-medium text-on-surface-variant/70">{item.time}</span>
-                          {item.unread && (
-                            <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
-                          )}
-                        </div>
-                      </div>
-                      <p className="text-xs text-on-surface-variant/80 font-medium leading-relaxed">
-                        {item.description}
-                      </p>
-
-                      {/* Badges */}
-                      {item.badges && (
-                        <div className="flex gap-2 mt-3">
-                          {item.badges.map(badge => (
-                            <span
-                              key={badge.label}
-                              className={`text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-md ${
-                                badge.variant === 'green'
-                                  ? 'bg-primary text-white'
-                                  : 'bg-[#002819] text-white'
-                              }`}
-                            >
-                              {badge.label}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                    <p className="text-xs text-on-surface-variant/80 font-medium leading-relaxed">
+                      {notif.description}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </motion.section>
-        ))}
+              </motion.div>
+            );
+          })
+        ) : (
+          <div className="flex flex-col items-center justify-center py-24 text-center space-y-4 opacity-40">
+            <Inbox size={64} strokeWidth={1} />
+            <p className="font-bold italic uppercase tracking-widest text-xs">The Digital Clubhouse is quiet today.</p>
+          </div>
+        )}
       </div>
     </PageTransition>
   );

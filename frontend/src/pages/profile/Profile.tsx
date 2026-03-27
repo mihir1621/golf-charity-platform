@@ -132,6 +132,10 @@ const Profile = () => {
                 </div>
              </div>
              
+             <Link to="/billing" className="w-full flex items-center justify-center gap-2 py-4 text-[10px] font-black text-[#fed65b] uppercase tracking-widest italic hover:text-white transition-colors border border-[#fed65b]/20 rounded-2xl mt-8">
+                Manage Billing
+             </Link>
+             
              <div className="absolute -bottom-10 -right-10 opacity-10 text-white w-40 h-40">
                 <CreditCard size={160} />
              </div>

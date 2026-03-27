@@ -109,7 +109,7 @@ const Leaderboard: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search golfers by name or club..."
-            className="w-full h-14 pl-13 pr-6 bg-white rounded-2xl border border-black/[0.06] text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all italic"
+            className="w-full h-14 pl-13 pr-6 bg-white rounded-2xl border border-black/[0.06] text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all italic placeholder:text-on-surface-variant/70"
           />
         </div>
       </div>
@@ -150,7 +150,7 @@ const Leaderboard: React.FC = () => {
             >
               {/* Rank */}
               <div className="col-span-1 flex items-center gap-2">
-                <span className={`text-lg font-black tracking-tighter italic ${entry.rank <= 3 ? 'text-secondary' : 'text-on-surface-variant/80'}`}>
+                <span className={`text-xl font-black tracking-tighter italic ${entry.rank <= 3 ? 'text-secondary' : 'text-[#002819]/80'}`}>
                   {String(entry.rank).padStart(2, '0')}
                 </span>
                 {entry.rank === 1 && <Crown size={14} className="text-[#c9a820]" />}
@@ -208,7 +208,7 @@ const Leaderboard: React.FC = () => {
               Top 10 golfers on the Global Leaderboard at the end of every quarter earn an all-expenses-paid trip to our Season Final at Pebble Beach.
             </p>
             <button
-              onClick={() => navigate('/subscription')}
+              onClick={() => navigate('/subscribe')}
               className="px-8 py-4 bg-[#fed65b] text-[#002819] rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl italic"
             >
               Boost Your Ranking

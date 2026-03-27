@@ -13,10 +13,13 @@ import Login from './pages/auth/Login';
 import Signup from './pages/auth/Signup';
 import Dashboard from './pages/dashboard/Dashboard';
 import Charities from './pages/charities/Charities';
+import CharityProfile from './pages/charities/CharityProfile';
+import Billing from './pages/subscription/Billing';
 import Subscribe from './pages/subscription/Subscribe';
 import Scores from './pages/scores/Scores';
 import Draws from './pages/draws/Draws';
 import Admin from './pages/admin/Admin';
+import DrawSimulatorAdmin from './pages/admin/DrawSimulatorAdmin';
 import Profile from './pages/profile/Profile';
 import LogScore from './pages/scores/LogScore';
 import Success from './pages/subscription/Success';
@@ -26,6 +29,8 @@ import Perks from './pages/perks/Perks';
 import Notifications from './pages/notifications/Notifications';
 import ImpactReports from './pages/impact/ImpactReports';
 import Leaderboard from './pages/leaderboard/Leaderboard';
+import WinnerVerification from './pages/draws/WinnerVerification';
+import DrawSimulator from './pages/draws/DrawSimulator';
 import Privacy from './pages/support/Privacy';
 import Terms from './pages/support/Terms';
 import Support from './pages/support/Support';
@@ -67,8 +72,13 @@ const AppContent: React.FC = () => {
             <Route path="/impact" element={<ImpactReports />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/draw-simulator" element={<DrawSimulatorAdmin />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/winner-proof" element={<div className="p-10 text-center font-black text-4xl mt-20 text-slate-700 uppercase tracking-tighter italic">Proof of Win <br/> Verification <span className="text-charity-500 underline underline-offset-8">Pending.</span></div>} />
+            <Route path="/verification" element={<WinnerVerification />} />
+            <Route path="/winner-proof" element={<WinnerVerification />} />
+            <Route path="/draw-simulator" element={<DrawSimulator />} />
+            <Route path="/charity/:id" element={<CharityProfile />} />
+            <Route path="/billing" element={<Billing />} />
           </Route>
 
           {/* Fallback 404 */}

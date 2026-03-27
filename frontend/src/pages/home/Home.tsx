@@ -2,9 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Trophy, Heart, Shield, Globe, Users } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import PageTransition from '../../components/animations/PageTransition';
 
 const Home: React.FC = () => {
+  const { user } = useAuth();
   return (
     <PageTransition className="bg-[#f7f9fb] text-[#191c1e] antialiased font-sans selection:bg-[#fed65b] selection:text-[#002819] overflow-x-hidden">
       <main className="pt-0">
@@ -41,9 +43,15 @@ const Home: React.FC = () => {
                 Experience the prestige of a digital clubhouse. Enter exclusive draws, track your impact, and transform your passion for the game into global good.
               </p>
               <div className="flex flex-wrap gap-4 md:gap-6">
-                <Link to="/signup" className="flex-1 sm:flex-none text-center bg-[#fed65b] text-[#002819] px-6 md:px-10 py-4 md:py-5 rounded-xl font-black text-base md:text-xl hover:scale-[1.05] shadow-2xl transition-all active:scale-95 uppercase tracking-tighter">
-                  Get Started
-                </Link>
+                {user ? (
+                  <Link to="/dashboard" className="flex-1 sm:flex-none text-center bg-[#fed65b] text-[#002819] px-6 md:px-10 py-4 md:py-5 rounded-xl font-black text-base md:text-xl hover:scale-[1.05] shadow-2xl transition-all active:scale-95 uppercase tracking-tighter">
+                    Enter Dashboard
+                  </Link>
+                ) : (
+                  <Link to="/signup" className="flex-1 sm:flex-none text-center bg-[#fed65b] text-[#002819] px-6 md:px-10 py-4 md:py-5 rounded-xl font-black text-base md:text-xl hover:scale-[1.05] shadow-2xl transition-all active:scale-95 uppercase tracking-tighter">
+                    Get Started
+                  </Link>
+                )}
                 <Link to="/draws" className="flex-1 sm:flex-none text-center bg-[#002819]/40 backdrop-blur-md text-white border border-white/20 px-6 md:px-10 py-4 md:py-5 rounded-xl font-black text-base md:text-xl hover:bg-[#002819]/60 transition-all uppercase tracking-tighter">
                   View Draws
                 </Link>
@@ -151,7 +159,7 @@ const Home: React.FC = () => {
                    <li key={idx} className="flex items-center gap-3"><span className="w-1.5 h-1.5 bg-[#002819] rounded-full"></span> {t}</li>
                 ))}
               </ul>
-              <Link to="/signup" className="w-full py-4 rounded-xl md:rounded-2xl font-black uppercase text-xs md:text-sm border-2 border-[#191c1e]/5 hover:bg-[#191c1e] hover:text-white transition-all">Choose Plan</Link>
+              <Link to={user ? "/subscribe" : "/signup"} className="w-full py-4 rounded-xl md:rounded-2xl font-black uppercase text-xs md:text-sm border-2 border-[#191c1e]/5 hover:bg-[#191c1e] hover:text-white transition-all text-center">Choose Plan</Link>
             </div>
             
             {/* Elite - Highlighted */}
@@ -164,7 +172,7 @@ const Home: React.FC = () => {
                    <li key={idx} className="flex items-center gap-3"><span className="w-1.5 h-1.5 bg-[#fed65b] rounded-full"></span> {t}</li>
                 ))}
               </ul>
-              <Link to="/signup" className="w-full py-5 rounded-xl md:rounded-2xl font-black uppercase text-xs md:text-sm bg-[#fed65b] text-[#002819] hover:scale-105 transition-all shadow-xl">Join the Elite</Link>
+              <Link to={user ? "/subscribe" : "/signup"} className="w-full py-5 rounded-xl md:rounded-2xl font-black uppercase text-xs md:text-sm bg-[#fed65b] text-[#002819] hover:scale-105 transition-all shadow-xl text-center">Join the Elite</Link>
             </div>
             
             {/* Masters */}
@@ -176,7 +184,7 @@ const Home: React.FC = () => {
                    <li key={idx} className="flex items-center gap-3"><span className="w-1.5 h-1.5 bg-[#002819] rounded-full"></span> {t}</li>
                 ))}
               </ul>
-              <Link to="/signup" className="w-full py-4 rounded-xl md:rounded-2xl font-black uppercase text-xs md:text-sm border-2 border-[#191c1e]/5 hover:bg-[#191c1e] hover:text-white transition-all">Go Masters</Link>
+              <Link to={user ? "/subscribe" : "/signup"} className="w-full py-4 rounded-xl md:rounded-2xl font-black uppercase text-xs md:text-sm border-2 border-[#191c1e]/5 hover:bg-[#191c1e] hover:text-white transition-all text-center">Go Masters</Link>
             </div>
           </div>
         </section>
@@ -188,7 +196,11 @@ const Home: React.FC = () => {
                 <h2 className="text-4xl sm:text-5xl md:text-[8rem] font-black text-white italic tracking-tighter mb-8 md:mb-10 leading-[1.1] uppercase">Ready to tee off?</h2>
                 <p className="text-white/85 text-base md:text-2xl max-w-2xl mx-auto mb-10 md:mb-16 font-medium italic">Join thousands of golfers worldwide turning birdies into breakthroughs.</p>
                 <div className="flex flex-col sm:flex-row justify-center items-center gap-6 md:gap-10">
-                   <Link to="/signup" className="w-full sm:w-auto bg-[#fed65b] text-[#002819] px-10 md:px-14 py-4 md:py-6 rounded-xl md:rounded-2xl font-black text-lg md:text-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl uppercase italic">Join the Fund</Link>
+                   {user ? (
+                     <Link to="/dashboard" className="w-full sm:w-auto bg-[#fed65b] text-[#002819] px-10 md:px-14 py-4 md:py-6 rounded-xl md:rounded-2xl font-black text-lg md:text-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl uppercase italic">Enter Dashboard</Link>
+                   ) : (
+                     <Link to="/signup" className="w-full sm:w-auto bg-[#fed65b] text-[#002819] px-10 md:px-14 py-4 md:py-6 rounded-xl md:rounded-2xl font-black text-lg md:text-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl uppercase italic">Join the Fund</Link>
+                   )}
                    <Link to="/charities" className="text-white/80 hover:text-white transition-colors font-black uppercase text-sm md:text-xl tracking-tighter underline underline-offset-8 italic">Contact Sales</Link>
                 </div>
              </div>

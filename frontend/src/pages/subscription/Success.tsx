@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Check, 
@@ -8,11 +9,37 @@ import {
   TreePine,
   Droplets
 } from 'lucide-react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import apiClient from '../../api/apiClient';
 import PageTransition from '../../components/animations/PageTransition';
+
 
 const Success = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [verifying, setVerifying] = useState(true);
+  const [status, setStatus] = useState<string | null>(null);
+
+  useEffect(() => {
+    const sessionId = searchParams.get('session_id');
+    if (sessionId) {
+      verifySession(sessionId);
+    } else {
+      setVerifying(false);
+    }
+  }, [searchParams]);
+
+  const verifySession = async (sessionId: string) => {
+    try {
+      const response = await apiClient.get(`/subscribe/verify?sessionId=${sessionId}`);
+      setStatus(response.data.status);
+    } catch (err) {
+      console.error('Session verification failed:', err);
+      setStatus('error');
+    } finally {
+      setVerifying(false);
+    }
+  };
 
   return (
     <PageTransition className="min-h-screen bg-[#f8f9f8] flex flex-col selection:bg-primary/20">
@@ -36,22 +63,39 @@ const Success = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center space-y-6"
           >
-            {/* Check Circle */}
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', damping: 12, stiffness: 150 }}
-              className="w-20 h-20 bg-[#002819] rounded-full flex items-center justify-center mx-auto shadow-[0_16px_40px_rgba(0,40,25,0.25)]"
-            >
-              <Check size={36} className="text-white" strokeWidth={3} />
-            </motion.div>
+            {verifying ? (
+              <div className="flex flex-col items-center gap-6">
+                 <div className="w-20 h-20 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+                 <h1 className="text-4xl font-black text-[#002819] tracking-tight italic">Verifying your victory...</h1>
+              </div>
+            ) : status === 'error' ? (
+              <div className="flex flex-col items-center gap-6">
+                 <div className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center text-white">
+                    <HelpCircle size={48} />
+                 </div>
+                 <h1 className="text-4xl font-black text-red-600 tracking-tight italic">Verification Failed</h1>
+                 <p className="text-on-surface-variant font-medium">Something went wrong while verifying your session. Please contact support.</p>
+              </div>
+            ) : (
+              <>
+                {/* Check Circle */}
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', damping: 12, stiffness: 150 }}
+                  className="w-20 h-20 bg-[#002819] rounded-full flex items-center justify-center mx-auto shadow-[0_16px_40px_rgba(0,40,25,0.25)]"
+                >
+                  <Check size={36} className="text-white" strokeWidth={3} />
+                </motion.div>
 
-            <h1 className="text-5xl font-black text-[#002819] tracking-tight italic">
-              You're All Set!
-            </h1>
-            <p className="text-base text-on-surface-variant/85 font-medium leading-relaxed max-w-md mx-auto">
-              Your membership is now active. Welcome to the exclusive circle of the Digital Clubhouse.
-            </p>
+                <h1 className="text-5xl font-black text-[#002819] tracking-tight italic">
+                  You're All Set!
+                </h1>
+                <p className="text-base text-on-surface-variant/85 font-medium leading-relaxed max-w-md mx-auto">
+                  Your membership is now active. Welcome to the exclusive circle of the Digital Clubhouse.
+                </p>
+              </>
+            )}
           </motion.div>
 
           {/* Cards Row */}

@@ -31,6 +31,15 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Check for session verification first if redirected from Stripe
+        const queryParams = new URLSearchParams(window.location.search);
+        const sessionId = queryParams.get('session_id');
+        if (sessionId) {
+          await apiClient.get(`/subscribe/verify?sessionId=${sessionId}`);
+          // Clean URL
+          navigate('/dashboard', { replace: true });
+        }
+
         const [profileRes, scoresRes, resultsRes] = await Promise.all([
           apiClient.get('/user/profile'),
           apiClient.get('/scores'),
@@ -46,7 +55,7 @@ const Dashboard: React.FC = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [navigate]);
 
   const totalWinnings = results.reduce((acc, curr) => acc + (curr.prizeAmount || 0), 0);
 
@@ -81,7 +90,7 @@ const Dashboard: React.FC = () => {
           <button onClick={() => navigate('/impact')} className="px-8 py-4 bg-surface-container-highest text-on-surface font-black rounded-2xl transition-all hover:bg-surface-container-high uppercase tracking-widest text-xs italic">
             View Impact
           </button>
-          <button onClick={() => navigate('/scores/new')} className="px-8 py-4 bg-gradient-to-br from-primary to-[#06402b] text-white font-black rounded-2xl shadow-2xl hover:opacity-90 transition-all uppercase tracking-widest text-xs italic">
+          <button onClick={() => navigate('/scores')} className="px-8 py-4 bg-gradient-to-br from-primary to-[#06402b] text-white font-black rounded-2xl shadow-2xl hover:opacity-90 transition-all uppercase tracking-widest text-xs italic">
             New Score
           </button>
         </div>
@@ -194,7 +203,7 @@ const Dashboard: React.FC = () => {
             )) : (
               <div className="bg-surface-container-low/30 rounded-[2.5rem] p-12 border-2 border-dashed border-outline-variant/20 text-center">
                  <p className="text-on-surface-variant font-black italic uppercase tracking-widest opacity-70">Log your first score to start participating.</p>
-                 <button onClick={() => navigate('/scores/new')} className="mt-4 text-primary font-bold uppercase tracking-widest text-xs">Log Score Now</button>
+                 <button onClick={() => navigate('/scores')} className="mt-4 text-primary font-bold uppercase tracking-widest text-xs">Log Score Now</button>
               </div>
             )}
           </div>
@@ -248,7 +257,7 @@ const Dashboard: React.FC = () => {
       <motion.button 
         whileHover={{ scale: 1.1, rotate: 90 }}
         whileTap={{ scale: 0.9 }}
-        onClick={() => navigate('/scores/new')}
+        onClick={() => navigate('/scores')}
         className="fixed bottom-10 right-10 w-20 h-20 bg-gradient-to-br from-[#fed65b] to-[#735c00] text-[#002819] rounded-[2.5rem] shadow-[0_20px_40px_rgba(115,92,0,0.3)] flex items-center justify-center z-50 group hover:shadow-[0_25px_50px_rgba(115,92,0,0.4)] transition-all"
       >
         <PlusCircle size={32} />
