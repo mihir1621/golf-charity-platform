@@ -238,3 +238,40 @@ export const createPortalSession = async (req: AuthRequest, res: Response): Prom
     res.status(500).json({ error: error.message });
   }
 };
+
+export const getReceipt = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { sessionId } = req.query;
+    if (!sessionId) {
+      res.status(400).json({ error: 'Missing sessionId' });
+      return;
+    }
+
+    const session = await stripe.checkout.sessions.retrieve(sessionId as string, {
+      expand: ['invoice']
+    });
+
+    const invoice = session.invoice as any;
+    if (invoice?.hosted_invoice_url) {
+      res.status(200).json({ url: invoice.hosted_invoice_url });
+    } else {
+      // Fallback for one-time payments or cases where invoice isn't yet ready
+      const sessionRetrieved = await stripe.checkout.sessions.retrieve(sessionId as string);
+      if (sessionRetrieved.payment_intent) {
+        const pi = await stripe.paymentIntents.retrieve(sessionRetrieved.payment_intent as string);
+        if (pi.latest_charge) {
+          const charge = await stripe.charges.retrieve(pi.latest_charge as string);
+          if (charge.receipt_url) {
+            res.status(200).json({ url: charge.receipt_url });
+            return;
+          }
+        }
+      }
+      res.status(404).json({ error: 'Receipt not found yet. It may still be generating.' });
+    }
+  } catch (error: any) {
+    console.error('Receipt retrieval failed:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+

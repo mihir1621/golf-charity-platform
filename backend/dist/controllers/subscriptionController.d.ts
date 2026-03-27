@@ -4,4 +4,5 @@ export declare const createSubscription: (req: AuthRequest, res: Response) => Pr
 export declare const handleStripeWebhook: (req: Request, res: Response) => Promise<void>;
 export declare const verifySession: (req: AuthRequest, res: Response) => Promise<void>;
 export declare const createPortalSession: (req: AuthRequest, res: Response) => Promise<void>;
+export declare const getReceipt: (req: AuthRequest, res: Response) => Promise<void>;
 //# sourceMappingURL=subscriptionController.d.ts.map
