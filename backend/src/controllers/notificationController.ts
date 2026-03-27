@@ -7,12 +7,19 @@ export const getNotifications = async (req: AuthRequest, res: Response): Promise
     const uid = req.user?.uid;
     const notificationsSnapshot = await db.collection('notifications')
       .where('userId', '==', uid)
-      .orderBy('createdAt', 'desc')
-      .limit(50)
+      .limit(100)
       .get();
       
-    const notifications = notificationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    res.status(200).json(notifications);
+    let notifications = notificationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as any }));
+    
+    // In-memory sort to avoid Firestore composite index requirement
+    notifications.sort((a, b) => {
+      const dateA = a.createdAt?._seconds ? a.createdAt._seconds : new Date(a.createdAt).getTime();
+      const dateB = b.createdAt?._seconds ? b.createdAt._seconds : new Date(b.createdAt).getTime();
+      return dateB - dateA;
+    });
+
+    res.status(200).json(notifications.slice(0, 50));
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
@@ -23,7 +30,7 @@ export const markAsRead = async (req: AuthRequest, res: Response): Promise<void>
     const { notificationId } = req.params;
     const uid = req.user?.uid;
 
-    const notifRef = db.collection('notifications').doc(notificationId);
+    const notifRef = db.collection('notifications').doc(notificationId as string);
     const notifDoc = await notifRef.get();
 
     if (!notifDoc.exists || notifDoc.data()?.userId !== uid) {

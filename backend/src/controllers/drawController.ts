@@ -179,11 +179,51 @@ export const getResults = async (req: AuthRequest, res: Response): Promise<void>
 export const getDrawHistory = async (_req: AuthRequest, res: Response): Promise<void> => {
   try {
     const drawsSnapshot = await db.collection('draws')
-      .orderBy('executedAt', 'desc')
+      .limit(100)
       .get();
       
-    const draws = drawsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    let draws = drawsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() as any }));
+    
+    // In-memory sort
+    draws.sort((a,b) => {
+      const dateA = a.executedAt?._seconds ? a.executedAt._seconds : new Date(a.executedAt).getTime();
+      const dateB = b.executedAt?._seconds ? b.executedAt._seconds : new Date(b.executedAt).getTime();
+      return dateB - dateA;
+    });
+
     res.status(200).json(draws);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getLatestDraw = async (_req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const latestSnapshot = await db.collection('draws')
+      .orderBy('executedAt', 'desc')
+      .limit(1)
+      .get();
+      
+    if (latestSnapshot.empty) {
+      res.status(200).json(null);
+      return;
+    }
+    
+    const draw = latestSnapshot.docs[0];
+    if (!draw) {
+      res.status(200).json(null);
+      return;
+    }
+    res.status(200).json({ id: draw.id, ...draw.data() });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getGlobalStats = async (_req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const statsDoc = await db.collection('stats').doc('global').get();
+    res.status(200).json(statsDoc.data() || { rolloverAmount: 0 });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

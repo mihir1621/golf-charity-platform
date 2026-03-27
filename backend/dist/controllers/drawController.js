@@ -1,7 +1,8 @@
 import { db } from '../config/firebase.js';
+import { createNotification } from './notificationController.js';
 export const runDraw = async (req, res) => {
     try {
-        const { monthYear, isSimulation } = req.body;
+        const { monthYear = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }), isSimulation = false } = req.body || {};
         // 1. Admin Authorization check
         const uid = req.user?.uid;
         const userDocRef = db.collection('users').doc(uid);
@@ -96,10 +97,13 @@ export const runDraw = async (req, res) => {
             // Update global stats with rollover for next time
             await statsRef.set({ rolloverAmount: nextRollover }, { merge: true });
             const batch = db.batch();
-            drawResults.forEach(resItem => {
+            // Use for...of to handle await inside loop correctly for notifications
+            for (const resItem of drawResults) {
                 const docRef = db.collection('results').doc();
                 batch.set(docRef, { ...resItem, drawId: drawRef.id });
-            });
+                // Notify the winner
+                await createNotification(resItem.userId, 'draw', 'You Won a Prize!', `Congratulations! You matched scores in the ${monthYear} draw and won £${resItem.prizeAmount}.`);
+            }
             await batch.commit();
             res.status(200).json({
                 message: 'Draw completed and results published.',
@@ -141,10 +145,46 @@ export const getResults = async (req, res) => {
 export const getDrawHistory = async (_req, res) => {
     try {
         const drawsSnapshot = await db.collection('draws')
-            .orderBy('executedAt', 'desc')
+            .limit(100)
             .get();
-        const draws = drawsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        let draws = drawsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        // In-memory sort
+        draws.sort((a, b) => {
+            const dateA = a.executedAt?._seconds ? a.executedAt._seconds : new Date(a.executedAt).getTime();
+            const dateB = b.executedAt?._seconds ? b.executedAt._seconds : new Date(b.executedAt).getTime();
+            return dateB - dateA;
+        });
         res.status(200).json(draws);
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+export const getLatestDraw = async (_req, res) => {
+    try {
+        const latestSnapshot = await db.collection('draws')
+            .orderBy('executedAt', 'desc')
+            .limit(1)
+            .get();
+        if (latestSnapshot.empty) {
+            res.status(200).json(null);
+            return;
+        }
+        const draw = latestSnapshot.docs[0];
+        if (!draw) {
+            res.status(200).json(null);
+            return;
+        }
+        res.status(200).json({ id: draw.id, ...draw.data() });
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+export const getGlobalStats = async (_req, res) => {
+    try {
+        const statsDoc = await db.collection('stats').doc('global').get();
+        res.status(200).json(statsDoc.data() || { rolloverAmount: 0 });
     }
     catch (error) {
         res.status(500).json({ error: error.message });

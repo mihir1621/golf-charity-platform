@@ -1,5 +1,6 @@
 import { db } from '../config/firebase.js';
 import stripe from '../config/stripe.js';
+import { createNotification } from './notificationController.js';
 export const createSubscription = async (req, res) => {
     try {
         const uid = req.user?.uid;
@@ -72,8 +73,9 @@ export const createSubscription = async (req, res) => {
                     quantity: 1,
                 },
             ],
-            success_url: `${process.env.FRONTEND_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.FRONTEND_URL}/subscribe`,
+            metadata: { planType, uid: userData.uid }
         });
         res.status(200).json({ checkoutUrl: session.url });
     }
@@ -180,6 +182,8 @@ export const verifySession = async (req, res) => {
                 subscriptionStatus: 'active',
                 updatedAt: new Date()
             });
+            // Notify the user of their new membership status
+            await createNotification(uid, 'membership', 'Membership Active', `Welcome to the Digital Clubhouse! Your ${session.metadata?.planType || 'monthly'} plan is now active.`);
             res.status(200).json({ status: 'active' });
         }
         else {
@@ -188,6 +192,26 @@ export const verifySession = async (req, res) => {
     }
     catch (error) {
         console.error('Session Verification error:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+export const createPortalSession = async (req, res) => {
+    try {
+        const uid = req.user?.uid;
+        const userDoc = await db.collection('users').doc(uid).get();
+        const userData = userDoc.data();
+        if (!userData?.stripeCustomerId) {
+            res.status(400).json({ error: 'No active Stripe customer found for this account.' });
+            return;
+        }
+        const session = await stripe.billingPortal.sessions.create({
+            customer: userData.stripeCustomerId,
+            return_url: `${process.env.FRONTEND_URL}/billing`,
+        });
+        res.status(200).json({ url: session.url });
+    }
+    catch (error) {
+        console.error('Portal session creation failed:', error);
         res.status(500).json({ error: error.message });
     }
 };

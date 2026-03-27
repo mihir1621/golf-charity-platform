@@ -4,7 +4,6 @@ import {
   Trophy, 
   TreePine, 
   Award, 
-  Lock, 
   Megaphone,
   Settings,
   CheckCheck,

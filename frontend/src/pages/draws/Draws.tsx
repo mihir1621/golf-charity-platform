@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Trophy, 
@@ -6,19 +7,62 @@ import {
   ChevronDown, 
   CheckCircle2,
   TrendingUp,
-  PlusCircle
+  PlusCircle,
+  Loader2
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import apiClient from '../../api/apiClient';
 import PageTransition from '../../components/animations/PageTransition';
 
-const Draws = () => {
-  const latestNumbers = ['08', '15', '23', '31', '42'];
-  const bonusNumber = '12';
+interface DrawItem {
+  id: string;
+  monthYear: string;
+  winningNumbers: string[];
+  totalPrizePool: number;
+  status: string;
+  executedAt: any;
+  rolloverAdded?: number;
+}
 
-  const historicalDraws = [
-    { date: 'May 12, 2024', numbers: ['04', '19', '22', '36', '48'], bonus: '02', jackpot: '£1,842,000', winners: '412', status: 'ROLLOVER' },
-    { date: 'May 05, 2024', numbers: ['11', '14', '25', '33', '45'], bonus: '09', jackpot: '£1,225,000', winners: '1 (Jackpot)', status: 'WON' },
-    { date: 'Apr 28, 2024', numbers: ['07', '12', '21', '29', '40'], bonus: '05', jackpot: '£850,000', winners: '385', status: 'ROLLOVER' },
-  ];
+const Draws = () => {
+  const navigate = useNavigate();
+  const [latestDraw, setLatestDraw] = useState<DrawItem | null>(null);
+  const [history, setHistory] = useState<DrawItem[]>([]);
+  const [stats, setStats] = useState({ rolloverAmount: 0 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDrawData();
+  }, []);
+
+  const fetchDrawData = async () => {
+    try {
+      const [latestRes, historyRes, statsRes] = await Promise.all([
+        apiClient.get('/draw/latest'),
+        apiClient.get('/draw/history'),
+        apiClient.get('/draw/stats')
+      ]);
+      setLatestDraw(latestRes.data);
+      setHistory(historyRes.data);
+      setStats(statsRes.data);
+    } catch (err) {
+      console.error('Failed to fetch draw data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(amount);
+  };
+
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <Loader2 className="animate-spin text-primary" size={48} />
+    </div>
+  );
+
+  const displayJackpot = formatCurrency(2450000 + (stats.rolloverAmount || 0));
 
   return (
     <PageTransition className="p-8 space-y-12 max-w-7xl mx-auto">
@@ -32,24 +76,23 @@ const Draws = () => {
         >
           <div className="relative z-10">
             <span className="text-[10px] font-black text-secondary uppercase tracking-[0.3em] mb-6 block italic">Current Jackpot Status</span>
-            <h1 className="text-6xl md:text-7xl font-black italic tracking-tighter mb-4 leading-none">£2,450,000</h1>
+            <h1 className="text-6xl md:text-7xl font-black italic tracking-tighter mb-4 leading-none">{displayJackpot}</h1>
             <p className="text-white/60 text-lg font-medium leading-relaxed max-w-md mb-12 italic transition-opacity group-hover:text-white/80">
-              The pot has rolled over for 3 consecutive weeks. The next draw could be the life-changer.
+              Transform your membership into impact. Secure your spot in the next high-stakes Clubhouse draw.
             </p>
             
             <div className="flex flex-col md:flex-row items-start md:items-center gap-10">
               <div className="space-y-3">
-                <span className="text-[9px] font-black uppercase tracking-widest opacity-40">Next Draw In</span>
-                <div className="flex items-center gap-4 text-4xl font-black italic tracking-tighter">
-                   <span>02<small className="text-xs uppercase ml-1 opacity-10">d</small></span>
-                   <span className="opacity-20">:</span>
-                   <span>14<small className="text-xs uppercase ml-1 opacity-10">h</small></span>
-                   <span className="opacity-20">:</span>
-                   <span>45<small className="text-xs uppercase ml-1 opacity-10">m</small></span>
+                <span className="text-[9px] font-black uppercase tracking-widest opacity-40">Frequency</span>
+                <div className="flex items-center gap-4 text-2xl font-black italic tracking-tighter uppercase">
+                   <span>Monthly <small className="text-xs uppercase ml-1 opacity-10">Draws</small></span>
                 </div>
               </div>
               
-              <button className="bg-[#fed65b] text-[#002819] px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all italic mt-4 md:mt-0">
+              <button 
+                onClick={() => navigate('/subscribe')}
+                className="bg-[#fed65b] text-[#002819] px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all italic mt-4 md:mt-0"
+              >
                 Secure Your Entry
               </button>
             </div>
@@ -67,28 +110,28 @@ const Draws = () => {
            className="bg-white rounded-[2.5rem] p-10 border border-outline-variant/10 shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col justify-between"
         >
           <div className="space-y-8">
-            <h3 className="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em] opacity-40 italic">Rollover History</h3>
+            <h3 className="text-xs font-black text-on-surface-variant uppercase tracking-[0.2em] opacity-40 italic">Global Stats</h3>
             
             <div className="space-y-10">
                <div className="flex justify-between items-end border-b border-surface-container pb-6">
                   <div>
-                    <p className="text-md font-black italic text-on-surface uppercase tracking-tight">May 12 Draw</p>
+                    <p className="text-md font-black italic text-on-surface uppercase tracking-tight">Active Rollover</p>
                   </div>
-                  <p className="text-md font-black text-primary italic">£1.8M Rollover</p>
+                  <p className="text-md font-black text-primary italic">{formatCurrency(stats.rolloverAmount)}</p>
                </div>
                
                <div className="flex justify-between items-end border-b border-surface-container pb-6">
                   <div>
-                    <p className="text-md font-black italic text-on-surface uppercase tracking-tight">May 05 Draw</p>
+                    <p className="text-md font-black italic text-on-surface uppercase tracking-tight">Total Draws</p>
                   </div>
-                  <p className="text-md font-black text-primary italic">£1.2M Rollover</p>
+                  <p className="text-md font-black text-primary italic">{history.length}</p>
                </div>
             </div>
           </div>
           
           <div className="mt-12 bg-primary/5 p-6 rounded-2xl border border-primary/5 flex items-center gap-4">
             <TrendingUp className="text-primary" size={20} />
-            <p className="text-[10px] font-black text-primary uppercase tracking-[0.1em] leading-relaxed italic">Projected to reach £3M by <br/> next weekend if unclaimed.</p>
+            <p className="text-[10px] font-black text-primary uppercase tracking-[0.1em] leading-relaxed italic">Real-time reward metrics <br/> synchronized with Clubhouse ops.</p>
           </div>
         </motion.div>
       </div>
@@ -105,7 +148,9 @@ const Draws = () => {
           <div className="flex justify-between items-start mb-12">
             <div>
               <h2 className="text-3xl font-black text-on-surface italic uppercase tracking-tighter mb-2">Latest Draw Results</h2>
-              <p className="text-[10px] font-black text-on-surface-variant/70 uppercase tracking-widest">Sunday, May 19 • Draw #452</p>
+              <p className="text-[10px] font-black text-on-surface-variant/70 uppercase tracking-widest">
+                {latestDraw ? new Date(latestDraw.executedAt?._seconds * 1000 || latestDraw.executedAt).toLocaleDateString('en-GB', { dateStyle: 'long' }) : 'No Draws Recorded'}
+              </p>
             </div>
             <div className="px-4 py-1.5 bg-primary text-secondary text-[9px] font-black rounded-full uppercase tracking-widest border border-primary">
               Official
@@ -113,43 +158,30 @@ const Draws = () => {
           </div>
           
           <div className="flex flex-wrap gap-4 mb-16">
-            {latestNumbers.map((num) => (
+            {latestDraw?.winningNumbers.map((num) => (
               <div 
                 key={num} 
                 className="w-16 h-16 rounded-full border-2 border-on-surface flex items-center justify-center text-2xl font-black italic text-on-surface group hover:bg-on-surface hover:text-white transition-all duration-300"
               >
                 {num}
               </div>
-            ))}
-            <div className="w-16 h-16 rounded-full bg-[#fed65b] flex items-center justify-center text-2xl font-black italic text-on-surface shadow-lg shadow-secondary/20">
-              {bonusNumber}
-            </div>
+            )) || <p className="text-xs font-black uppercase opacity-20">Awaiting inaugural draw...</p>}
           </div>
           
           <div className="space-y-6">
-             <div className="flex items-center justify-between p-6 bg-surface-container-low/30 rounded-2xl border border-transparent hover:border-outline-variant/10 transition-all">
-                <div className="flex items-center gap-6">
-                   <span className="px-3 py-1 bg-primary/10 text-primary text-[9px] font-black rounded-md uppercase tracking-widest italic">5 Match</span>
-                   <span className="text-sm font-black text-on-surface/80 uppercase">1 Winner</span>
-                </div>
-                <span className="text-xl font-black text-primary italic">£50,000.00</span>
-             </div>
-             
-             <div className="flex items-center justify-between p-6 bg-surface-container-low/30 rounded-2xl border border-transparent hover:border-outline-variant/10 transition-all">
-                <div className="flex items-center gap-6">
-                   <span className="px-3 py-1 bg-surface-container-high text-on-surface/70 text-[9px] font-black rounded-md uppercase tracking-widest italic">4 Match</span>
-                   <span className="text-sm font-black text-on-surface/80 uppercase">24 Winners</span>
-                </div>
-                <span className="text-xl font-black text-on-surface/80 italic">£2,450.00</span>
-             </div>
-
-             <div className="flex items-center justify-between p-6 bg-surface-container-low/30 rounded-2xl border border-transparent hover:border-outline-variant/10 transition-all">
-                <div className="flex items-center gap-6">
-                   <span className="px-3 py-1 bg-surface-container-high text-on-surface/70 text-[9px] font-black rounded-md uppercase tracking-widest italic">3 Match</span>
-                   <span className="text-sm font-black text-on-surface/80 uppercase">582 Winners</span>
-                </div>
-                <span className="text-xl font-black text-on-surface/80 italic">£25.00</span>
-             </div>
+             {[
+               { tier: 'Match-5', winners: '1 Winner', amount: 2000 },
+               { tier: 'Match-4', winners: '2 Winners', amount: 500 },
+               { tier: 'Match-3', winners: '5 Winners', amount: 100 }
+             ].map((t) => (
+               <div key={t.tier} className="flex items-center justify-between p-6 bg-surface-container-low/30 rounded-2xl border border-transparent hover:border-outline-variant/10 transition-all">
+                  <div className="flex items-center gap-6">
+                    <span className="px-3 py-1 bg-primary/10 text-primary text-[9px] font-black rounded-md uppercase tracking-widest italic">{t.tier}</span>
+                    <span className="text-sm font-black text-on-surface/80 uppercase">{t.winners}</span>
+                  </div>
+                  <span className="text-xl font-black text-primary italic">{formatCurrency(t.amount)}</span>
+               </div>
+             ))}
           </div>
         </motion.div>
 
@@ -158,7 +190,8 @@ const Draws = () => {
            initial={{ opacity: 0, x: 20 }}
            whileInView={{ opacity: 1, x: 0 }}
            viewport={{ once: true }}
-           className="bg-white rounded-[3rem] overflow-hidden border border-outline-variant/10 shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col group"
+           onClick={() => navigate('/subscribe')}
+           className="bg-white rounded-[3rem] overflow-hidden border border-outline-variant/10 shadow-[0_20px_40px_rgba(0,0,0,0.03)] flex flex-col group cursor-pointer"
         >
           <div className="h-[200px] w-full relative">
              <img 
@@ -180,7 +213,7 @@ const Draws = () => {
           
           <div className="p-10 flex-1 flex flex-col space-y-10">
              <p className="text-sm font-medium text-on-surface-variant italic leading-relaxed text-center quote relative">
-                "I've been a member of The Fairway for two years. Winning the 5-match prize last Sunday was a dream come true for my family and the local junior golf program I support."
+                "Winning the Match-5 prize was a dream come true. My passion for the game has finally transformed into a real impact for local junior golf programs."
              </p>
              
              <div className="mt-auto space-y-6">
@@ -194,9 +227,15 @@ const Draws = () => {
                    </div>
                 </div>
                 
-                <button className="w-full py-4 bg-on-surface text-white rounded-2xl flex items-center justify-center group overflow-hidden relative">
+                <button 
+                  onClick={() => navigate('/subscribe')}
+                  className="w-full py-4 bg-on-surface text-white rounded-2xl flex items-center justify-center group overflow-hidden relative"
+                >
                    <div className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                   <PlusCircle size={20} className="relative z-10" />
+                   <div className="relative z-10 flex items-center gap-3">
+                     <span className="text-[10px] font-black uppercase tracking-widest italic leading-none">Join the Winners</span>
+                     <PlusCircle size={20} />
+                   </div>
                 </button>
              </div>
           </div>
@@ -229,28 +268,29 @@ const Draws = () => {
               <tr className="text-left text-[9px] font-black uppercase tracking-[0.2em] text-on-surface-variant/70 border-b border-surface-container bg-surface-container-low/20">
                 <th className="px-12 py-10">Draw Date</th>
                 <th className="px-12 py-10">Winning Combination</th>
-                <th className="px-12 py-10">Jackpot Size</th>
-                <th className="px-12 py-10">Winners</th>
+                <th className="px-12 py-10">Jackpot Pool</th>
+                <th className="px-12 py-10">Rollover Added</th>
                 <th className="px-12 py-10">Status</th>
                 <th className="px-12 py-10 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-container/30">
-              {historicalDraws.map((draw) => (
-                <tr key={draw.date} className="group hover:bg-surface-container-low/50 transition-all">
-                  <td className="px-12 py-10 text-sm font-black text-on-surface uppercase italic tracking-tight">{draw.date}</td>
+              {history.length > 0 ? history.map((draw) => (
+                <tr key={draw.id} className="group hover:bg-surface-container-low/50 transition-all">
+                  <td className="px-12 py-10 text-sm font-black text-on-surface uppercase italic tracking-tight">
+                    {new Date(draw.executedAt?._seconds * 1000 || draw.executedAt).toLocaleDateString('en-GB')}
+                  </td>
                   <td className="px-12 py-10">
                     <div className="flex gap-2">
-                       {draw.numbers.map(n => (
+                       {draw.winningNumbers.map(n => (
                          <span key={n} className="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-[11px] font-black italic">{n}</span>
                        ))}
-                       <span className="w-8 h-8 rounded-full bg-[#fed65b]/20 text-secondary border border-secondary flex items-center justify-center text-[11px] font-black italic">{draw.bonus}</span>
                     </div>
                   </td>
-                  <td className="px-12 py-10 text-sm font-black text-primary italic tracking-tight">{draw.jackpot}</td>
-                  <td className="px-12 py-10 text-xs font-bold text-on-surface-variant leading-none">{draw.winners}</td>
+                  <td className="px-12 py-10 text-sm font-black text-primary italic tracking-tight">{formatCurrency(draw.totalPrizePool || 0)}</td>
+                  <td className="px-12 py-10 text-xs font-bold text-on-surface-variant leading-none">{formatCurrency(draw.rolloverAdded || 0)}</td>
                   <td className="px-12 py-10">
-                     <span className={`px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-widest italic ${draw.status === 'WON' ? 'bg-primary text-secondary' : 'bg-surface-container-high text-on-surface-variant'}`}>
+                     <span className={`px-3 py-1 rounded-md text-[9px] font-black uppercase tracking-widest italic ${draw.status === 'completed' ? 'bg-primary text-secondary' : 'bg-surface-container-high text-on-surface-variant'}`}>
                         {draw.status}
                      </span>
                   </td>
@@ -260,7 +300,13 @@ const Draws = () => {
                      </button>
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr>
+                  <td colSpan={6} className="px-12 py-24 text-center">
+                    <p className="text-xs font-black uppercase tracking-widest opacity-30 italic">No historical draws available yet.</p>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
           

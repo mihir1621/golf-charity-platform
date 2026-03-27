@@ -16,15 +16,21 @@ export const addScore = async (req, res) => {
             createdAt: new Date()
         };
         await scoresRef.add(newScore);
-        // Fetch user's current scores, sorted by date asc (oldest first)
+        // Fetch user's current scores
         const userScoresSnapshot = await scoresRef
             .where('userId', '==', uid)
-            .orderBy('date', 'asc')
             .get();
+        // Sort in memory to avoid index requirement
+        let scoreDocs = [...userScoresSnapshot.docs];
+        scoreDocs.sort((a, b) => {
+            const dateA = a.data().date?._seconds ? a.data().date._seconds : new Date(a.data().date).getTime();
+            const dateB = b.data().date?._seconds ? b.data().date._seconds : new Date(b.data().date).getTime();
+            return dateA - dateB;
+        });
         // If more than 5 scores, delete the oldest
-        if (userScoresSnapshot.size > 5) {
-            const deleteCount = userScoresSnapshot.size - 5;
-            const docsToDelete = userScoresSnapshot.docs.slice(0, deleteCount);
+        if (scoreDocs.length > 5) {
+            const deleteCount = scoreDocs.length - 5;
+            const docsToDelete = scoreDocs.slice(0, deleteCount);
             const batch = db.batch();
             docsToDelete.forEach(doc => {
                 batch.delete(doc.ref);
@@ -40,12 +46,17 @@ export const addScore = async (req, res) => {
 export const getScores = async (req, res) => {
     try {
         const uid = req.user?.uid;
-        // Sort descending by date
+        // Fetch scores for user
         const scoresSnapshot = await db.collection('scores')
             .where('userId', '==', uid)
-            .orderBy('date', 'desc')
             .get();
-        const scores = scoresSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        let scores = scoresSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        // In-memory sort
+        scores.sort((a, b) => {
+            const dateA = a.date?._seconds ? a.date._seconds : new Date(a.date).getTime();
+            const dateB = b.date?._seconds ? b.date._seconds : new Date(b.date).getTime();
+            return dateB - dateA;
+        });
         res.status(200).json(scores);
     }
     catch (error) {

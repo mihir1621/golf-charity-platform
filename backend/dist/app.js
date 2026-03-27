@@ -10,6 +10,8 @@ import charityRoutes from './routes/charityRoutes.js';
 import subscriptionRoutes from './routes/subscriptionRoutes.js';
 import winnerRoutes from './routes/winnerRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
+import perkRoutes from './routes/perkRoutes.js';
 dotenv.config();
 const app = express();
 app.use(cors());
@@ -27,6 +29,8 @@ app.use('/api/draw', drawRoutes);
 app.use('/api/charities', charityRoutes);
 app.use('/api/subscribe', subscriptionRoutes);
 app.use('/api/winner', winnerRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/perks', perkRoutes);
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).json({ status: 'OK', timestamp: new Date() });
