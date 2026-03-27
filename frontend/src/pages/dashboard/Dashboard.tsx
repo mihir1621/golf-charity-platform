@@ -11,6 +11,7 @@ import {
   Heart,
   Loader2
 } from 'lucide-react';
+import PageTransition from '../../components/animations/PageTransition';
 
 interface Score {
   id: string;
@@ -56,7 +57,7 @@ const Dashboard: React.FC = () => {
   );
 
   return (
-    <div className="px-6 py-12 max-w-7xl mx-auto space-y-12">
+    <PageTransition className="px-6 py-12 max-w-7xl mx-auto space-y-12">
       {/* Hero Welcome Header */}
       <section className="flex flex-col md:flex-row md:items-end justify-between gap-8">
         <div className="max-w-2xl">
@@ -95,7 +96,7 @@ const Dashboard: React.FC = () => {
         >
           <div>
             <div className="flex justify-between items-start mb-6">
-              <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] opacity-40">Membership</span>
+              <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] opacity-70">Membership</span>
               <span className={`px-3 py-1 ${profile?.subscriptionStatus === 'active' ? 'bg-primary/10 text-primary' : 'bg-error/10 text-error'} text-[10px] font-black rounded-full uppercase tracking-widest`}>
                 {profile?.subscriptionStatus?.toUpperCase() || 'INACTIVE'}
               </span>
@@ -105,7 +106,7 @@ const Dashboard: React.FC = () => {
             </p>
           </div>
           <div className="mt-12 pt-6 border-t border-outline-variant/5">
-            <p className="text-[9px] text-on-surface-variant uppercase tracking-[0.2em] mb-2 font-black opacity-40">Status</p>
+            <p className="text-[9px] text-on-surface-variant uppercase tracking-[0.2em] mb-2 font-black opacity-70">Status</p>
             <p className="text-sm font-black text-primary italic uppercase tracking-tight">
               {profile?.subscriptionStatus === 'active' ? 'Full Benefits Enabled' : 'Subscribe to Enter Draws'}
             </p>
@@ -118,7 +119,7 @@ const Dashboard: React.FC = () => {
           className="bg-white p-8 rounded-[2.5rem] shadow-[0_15px_30px_rgba(0,0,0,0.03)] border border-outline-variant/10 relative overflow-hidden group"
         >
           <div className="relative z-10">
-            <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-6 block opacity-40">Total Impact</span>
+            <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-6 block opacity-70">Total Impact</span>
             <p className="text-5xl font-black text-primary tracking-tighter italic leading-none">${profile?.totalCharityDonated || 0}</p>
             <div className="mt-4 flex items-center gap-2 text-secondary font-black">
               <span className="text-xs uppercase tracking-widest italic tracking-tight">{profile?.charityContributionPercent || 10}% Contribution Rate</span>
@@ -132,12 +133,12 @@ const Dashboard: React.FC = () => {
           whileHover={{ y: -5 }}
           className="bg-primary p-8 rounded-[2.5rem] shadow-2xl shadow-primary/20 text-white relative overflow-hidden group"
         >
-          <span className="text-[10px] font-black text-primary-fixed uppercase tracking-[0.2em] mb-6 block opacity-40">Verified Scores</span>
+          <span className="text-[10px] font-black text-primary-fixed uppercase tracking-[0.2em] mb-6 block opacity-70">Verified Scores</span>
           <div className="flex items-baseline gap-2 mb-6">
             <span className="text-5xl font-black tracking-tighter italic leading-none">{scores.length}</span>
-            <span className="text-xs font-black opacity-40 tracking-widest uppercase italic">/ 5 Capacity</span>
+            <span className="text-xs font-black opacity-85 tracking-widest uppercase italic">/ 5 Capacity</span>
           </div>
-          <p className="text-[10px] font-black uppercase tracking-widest opacity-60 italic">
+          <p className="text-[10px] font-black uppercase tracking-widest opacity-80 italic">
             {scores.length === 5 ? 'Eligible for Max Draw Tiers' : 'Enter 5 scores for full participation'}
           </p>
         </motion.div>
@@ -147,7 +148,7 @@ const Dashboard: React.FC = () => {
           whileHover={{ y: -5 }}
           className="bg-[#fed65b] p-8 rounded-[2.5rem] shadow-2xl shadow-secondary/10 text-on-secondary-container relative overflow-hidden group"
         >
-          <span className="text-[10px] font-black opacity-40 uppercase tracking-[0.2em] mb-6 block">Total Winnings</span>
+          <span className="text-[10px] font-black opacity-70 uppercase tracking-[0.2em] mb-6 block">Total Winnings</span>
           <p className="text-5xl font-black tracking-tighter italic leading-none text-[#002819]">${totalWinnings}</p>
           <button onClick={() => navigate('/leaderboard')} className="mt-12 text-[10px] font-black flex items-center gap-2 hover:gap-4 transition-all uppercase tracking-[0.2em] text-[#002819]">
             View Results 
@@ -175,13 +176,13 @@ const Dashboard: React.FC = () => {
                 className="bg-white p-6 rounded-[2.5rem] flex items-center gap-8 group hover:shadow-2xl transition-all border border-outline-variant/10"
               >
                 <div className="w-20 h-20 rounded-2xl bg-primary text-white flex flex-col items-center justify-center flex-shrink-0 shadow-xl group-hover:bg-secondary group-hover:text-primary transition-colors">
-                  <span className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-1">Pts</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest opacity-85 mb-1">Pts</span>
                   <span className="text-3xl font-black italic tracking-tighter">{score.value}</span>
                 </div>
                 <div className="flex-1">
                   <p className="text-[9px] font-black text-secondary uppercase tracking-[0.2em] mb-2 italic">Performance Log</p>
                   <h3 className="text-xl font-black text-on-surface leading-tight mb-2 italic uppercase tracking-tight">Stableford Round</h3>
-                  <div className="flex items-center gap-4 text-[11px] text-on-surface-variant font-bold uppercase tracking-widest opacity-60">
+                  <div className="flex items-center gap-4 text-[11px] text-on-surface-variant font-bold uppercase tracking-widest opacity-80">
                     <History size={14} />
                     <span>{new Date(score.date?._seconds ? score.date._seconds * 1000 : score.date).toLocaleDateString()}</span>
                   </div>
@@ -192,7 +193,7 @@ const Dashboard: React.FC = () => {
               </motion.div>
             )) : (
               <div className="bg-surface-container-low/30 rounded-[2.5rem] p-12 border-2 border-dashed border-outline-variant/20 text-center">
-                 <p className="text-on-surface-variant font-black italic uppercase tracking-widest opacity-40">Log your first score to start participating.</p>
+                 <p className="text-on-surface-variant font-black italic uppercase tracking-widest opacity-70">Log your first score to start participating.</p>
                  <button onClick={() => navigate('/scores/new')} className="mt-4 text-primary font-bold uppercase tracking-widest text-xs">Log Score Now</button>
               </div>
             )}
@@ -215,7 +216,7 @@ const Dashboard: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="text-md font-black text-on-surface italic uppercase tracking-tight">{win.matchTier} WINNER</h4>
-                    <p className="text-xs text-on-surface-variant mt-2 leading-relaxed font-medium opacity-60 italic">Prize Amount: ${win.prizeAmount}</p>
+                    <p className="text-xs text-on-surface-variant mt-2 leading-relaxed font-medium opacity-80 italic">Prize Amount: ${win.prizeAmount}</p>
                     <p className={`text-[10px] font-black mt-3 uppercase tracking-widest ${win.paymentStatus === 'paid' ? 'text-primary' : 'text-secondary'}`}>
                       Status: {win.paymentStatus}
                     </p>
@@ -223,7 +224,7 @@ const Dashboard: React.FC = () => {
                 </div>
               )) : (
                 <div className="text-center py-6">
-                  <p className="text-xs text-on-surface-variant font-medium opacity-40 uppercase tracking-widest italic">No winning results yet.</p>
+                  <p className="text-xs text-on-surface-variant font-medium opacity-70 uppercase tracking-widest italic">No winning results yet.</p>
                 </div>
               )}
             </div>
@@ -252,7 +253,7 @@ const Dashboard: React.FC = () => {
       >
         <PlusCircle size={32} />
       </motion.button>
-    </div>
+    </PageTransition>
   );
 };
 

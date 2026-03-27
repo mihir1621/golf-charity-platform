@@ -11,6 +11,7 @@ import {
   Heart
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import PageTransition from '../../components/animations/PageTransition';
 
 const Profile = () => {
   const { user } = useAuth();
@@ -20,13 +21,13 @@ const Profile = () => {
   const profileEmail = user?.email || "j.sterling@clubhouse.io";
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-12">
+    <PageTransition className="p-8 max-w-7xl mx-auto space-y-12">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start gap-8">
         <div>
           <span className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4 block italic">Account Executive</span>
           <h1 className="text-5xl font-black text-on-surface tracking-tighter mb-4 italic uppercase">Profile Settings</h1>
-          <p className="text-on-surface-variant text-lg font-medium italic opacity-60 max-w-2xl leading-relaxed">
+          <p className="text-on-surface-variant text-lg font-medium italic opacity-85 max-w-2xl leading-relaxed">
             Manage your digital identity, subscription preferences, and charitable impact within the Fairway ecosystem.
           </p>
         </div>
@@ -55,10 +56,10 @@ const Profile = () => {
                </div>
                
                <div className="text-center md:text-left">
-                  <p className="text-[9px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-2 opacity-40 italic">Full Name</p>
+                  <p className="text-[9px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-2 opacity-75 italic">Full Name</p>
                   <h2 className="text-3xl font-black italic uppercase tracking-tighter text-on-surface mb-6">{profileName}</h2>
                   
-                  <p className="text-[9px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-2 opacity-40 italic">Email Address</p>
+                  <p className="text-[9px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-2 opacity-75 italic">Email Address</p>
                   <p className="text-lg font-black italic text-on-surface tracking-tight mb-8">{profileEmail}</p>
 
                   <div className="flex flex-wrap gap-4 justify-center md:justify-start">
@@ -86,7 +87,7 @@ const Profile = () => {
                       <div className="p-4 bg-primary/5 rounded-2xl text-primary"><Lock size={20} /></div>
                       <div>
                          <h4 className="text-sm font-black italic uppercase tracking-tight text-on-surface">Account Password</h4>
-                         <p className="text-[10px] font-bold text-on-surface-variant italic opacity-40 uppercase tracking-widest">Last updated 4 months ago</p>
+                         <p className="text-[10px] font-bold text-on-surface-variant italic opacity-85 uppercase tracking-widest">Last updated 4 months ago</p>
                       </div>
                    </div>
                    <button className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest italic hover:text-primary transition-colors underline decoration-outline-variant/30 underline-offset-4">Update Password</button>
@@ -97,7 +98,7 @@ const Profile = () => {
                       <div className="p-4 bg-primary/5 rounded-2xl text-primary"><ShieldCheck size={20} /></div>
                       <div>
                          <h4 className="text-sm font-black italic uppercase tracking-tight text-on-surface">Two-Factor Authentication</h4>
-                         <p className="text-[10px] font-bold text-on-surface-variant italic opacity-40 uppercase tracking-widest">Recommended for elite security</p>
+                         <p className="text-[10px] font-bold text-on-surface-variant italic opacity-85 uppercase tracking-widest">Recommended for elite security</p>
                       </div>
                    </div>
                    <div className="w-12 h-6 bg-surface-container-highest rounded-full relative p-1 cursor-pointer">
@@ -116,16 +117,16 @@ const Profile = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-[#002819] p-10 rounded-[3.5rem] text-white relative overflow-hidden group shadow-2xl shadow-primary/30"
           >
-             <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-8 italic">Current Subscription</p>
+             <p className="text-[10px] font-black text-white/80 uppercase tracking-[0.3em] mb-8 italic">Current Subscription</p>
              <h3 className="text-5xl font-black italic uppercase tracking-tighter mb-4 text-[#fed65b]">Gold Tier</h3>
-             <p className="text-sm font-medium text-white/50 italic mb-10 tracking-wide">Annual Membership</p>
+             <p className="text-sm font-medium text-white/85 italic mb-10 tracking-wide">Annual Membership</p>
              
-             <div className="bg-white/5 backdrop-blur-md rounded-[2rem] p-8 space-y-4 border border-white/5">
-                <div className="flex justify-between items-center text-[10px] font-black uppercase italic text-white/30">
+             <div className="bg-white/10 backdrop-blur-md rounded-[2rem] p-8 space-y-4 border border-white/10">
+                <div className="flex justify-between items-center text-[10px] font-black uppercase italic text-white/80">
                    <span>Next Payment</span>
-                   <span className="text-white/60">Oct 24, 2024</span>
+                   <span className="text-white/95">Oct 24, 2024</span>
                 </div>
-                <div className="flex justify-between items-center text-[10px] font-black uppercase italic text-white/30">
+                <div className="flex justify-between items-center text-[10px] font-black uppercase italic text-white/80">
                    <span>Amount</span>
                    <span className="text-xl text-white tracking-tighter opacity-100">$1,200.00</span>
                 </div>
@@ -143,27 +144,27 @@ const Profile = () => {
                 <button className="text-[10px] font-black text-primary uppercase tracking-widest italic hover:underline">Manage</button>
              </div>
              
-             <div className="bg-surface-container-low p-8 rounded-[2rem] space-y-6">
-                <div className="flex items-center gap-5">
-                   <div className="w-12 h-12 rounded-xl bg-primary text-secondary flex items-center justify-center">
-                      <Heart size={24} fill="currentColor" />
-                   </div>
-                   <div>
-                      <p className="text-[9px] font-black text-on-surface-variant uppercase tracking-widest opacity-40 mb-1">Active Contribution</p>
-                      <h4 className="text-md font-black italic uppercase tracking-tight text-on-surface">Green Greens Foundation</h4>
-                   </div>
-                </div>
-                
-                <div className="space-y-2 pt-4 border-t border-surface-container">
-                   <div className="flex justify-between text-[8px] font-black text-on-surface-variant uppercase italic opacity-40">
-                      <span>Lifetime Impact</span>
-                      <span className="text-primary opacity-100">$4,850.00 Raised</span>
-                   </div>
-                   <div className="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
-                      <div className="h-full bg-[#745c00] w-[75%] rounded-full shadow-[0_0_10px_rgba(116,92,0,0.3)]"></div>
-                   </div>
-                </div>
-             </div>
+              <div className="bg-surface-container-low p-8 rounded-[2rem] space-y-6">
+                 <div className="flex items-center gap-5">
+                    <div className="w-12 h-12 rounded-xl bg-primary text-secondary flex items-center justify-center">
+                       <Heart size={24} fill="currentColor" />
+                    </div>
+                    <div>
+                       <p className="text-[9px] font-black text-on-surface-variant uppercase tracking-widest opacity-80 mb-1">Active Contribution</p>
+                       <h4 className="text-md font-black italic uppercase tracking-tight text-on-surface">Green Greens Foundation</h4>
+                    </div>
+                 </div>
+                 
+                 <div className="space-y-2 pt-4 border-t border-surface-container">
+                    <div className="flex justify-between text-[8px] font-black text-on-surface-variant uppercase italic opacity-85">
+                       <span>Lifetime Impact</span>
+                       <span className="text-primary opacity-100">$4,850.00 Raised</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+                       <div className="h-full bg-[#745c00] w-[75%] rounded-full shadow-[0_0_10px_rgba(116,92,0,0.3)]"></div>
+                    </div>
+                 </div>
+              </div>
           </div>
 
           {/* Quick Actions Buttons */}
@@ -180,16 +181,17 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className="pt-20 border-t border-surface-container flex flex-col md:flex-row justify-between items-center gap-10 opacity-40">
+
+      <div className="pt-20 border-t border-surface-container flex flex-col md:flex-row justify-between items-center gap-10 opacity-85">
          <div className="text-center md:text-left space-y-1">
             <p className="text-[10px] font-black uppercase tracking-widest italic">Account created September 12, 2022 • Member ID: #FF-99201</p>
          </div>
          <div className="flex gap-10 text-[10px] font-black uppercase tracking-widest italic">
-            <Link to="/" className="hover:text-primary transition-colors">Privacy Policy</Link>
-            <Link to="/" className="hover:text-primary transition-colors">Terms of Service</Link>
+            <Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
          </div>
       </div>
-    </div>
+    </PageTransition>
   );
 };
 

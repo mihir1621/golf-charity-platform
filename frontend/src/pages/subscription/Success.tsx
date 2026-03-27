@@ -9,12 +9,13 @@ import {
   Droplets
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
+import PageTransition from '../../components/animations/PageTransition';
 
 const Success = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#f8f9f8] flex flex-col selection:bg-primary/20">
+    <PageTransition className="min-h-screen bg-[#f8f9f8] flex flex-col selection:bg-primary/20">
       {/* Header */}
       <header className="px-12 py-8 flex justify-between items-center relative z-10">
         <Link to="/" className="text-xl font-black text-[#002819] italic tracking-tighter hover:opacity-80 transition-opacity">
@@ -48,7 +49,7 @@ const Success = () => {
             <h1 className="text-5xl font-black text-[#002819] tracking-tight italic">
               You're All Set!
             </h1>
-            <p className="text-base text-on-surface-variant/60 font-medium leading-relaxed max-w-md mx-auto">
+            <p className="text-base text-on-surface-variant/85 font-medium leading-relaxed max-w-md mx-auto">
               Your membership is now active. Welcome to the exclusive circle of the Digital Clubhouse.
             </p>
           </motion.div>
@@ -101,15 +102,15 @@ const Success = () => {
 
               {/* Impact Stats */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white/[0.08] rounded-2xl p-6 border border-white/[0.06] space-y-3">
-                  <TreePine size={20} className="text-primary-fixed/60" />
+                <div className="bg-white/[0.12] rounded-2xl p-6 border border-white/[0.08] space-y-3">
+                  <TreePine size={20} className="text-primary-fixed/80" />
                   <p className="text-3xl font-black tracking-tight">142</p>
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40">Trees Planted</p>
+                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/80">Trees Planted</p>
                 </div>
-                <div className="bg-white/[0.08] rounded-2xl p-6 border border-white/[0.06] space-y-3">
-                  <Droplets size={20} className="text-primary-fixed/60" />
+                <div className="bg-white/[0.12] rounded-2xl p-6 border border-white/[0.08] space-y-3">
+                  <Droplets size={20} className="text-primary-fixed/80" />
                   <p className="text-3xl font-black tracking-tight">8.4k</p>
-                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40">Liters Provided</p>
+                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/80">Liters Provided</p>
                 </div>
               </div>
 
@@ -167,7 +168,7 @@ const Success = () => {
               Enter The Vault
               <ArrowRight size={18} />
             </button>
-            <p className="text-sm text-on-surface-variant/50 font-medium">
+            <p className="text-sm text-on-surface-variant/85 font-medium">
               Need help?{' '}
               <button className="text-[#002819] font-bold hover:underline">Contact Clubhouse Support</button>
             </p>
@@ -189,7 +190,7 @@ const Success = () => {
           © 2024 Fairway Fund. The Digital Clubhouse.
         </span>
       </footer>
-    </div>
+    </PageTransition>
   );
 };
 

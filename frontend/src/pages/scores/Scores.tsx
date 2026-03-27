@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../api/apiClient';
+import PageTransition from '../../components/animations/PageTransition';
 
 const Scores: React.FC = () => {
   const navigate = useNavigate();
@@ -86,7 +87,7 @@ const Scores: React.FC = () => {
   }
 
   return (
-    <div className="p-8 space-y-12">
+    <PageTransition className="p-8 space-y-12">
       {/* Hero Section */}
       <section className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-10">
         <div className="max-w-2xl">
@@ -97,11 +98,11 @@ const Scores: React.FC = () => {
         
         <div className="flex gap-4 w-full lg:w-auto">
           <div className="flex-1 lg:min-w-[150px] bg-white p-6 rounded-[2rem] shadow-[0_15px_30px_rgba(0,0,0,0.03)] border border-outline-variant/5 flex flex-col items-center">
-            <span className="text-[9px] text-on-surface-variant font-black uppercase tracking-widest mb-2 opacity-40">Current Avg</span>
+            <span className="text-[9px] text-on-surface-variant font-black uppercase tracking-widest mb-2 opacity-70">Current Avg</span>
             <span className="text-4xl font-black text-primary tracking-tighter italic">{calculateAvg()}</span>
           </div>
           <div className="flex-1 lg:min-w-[150px] bg-primary text-white p-6 rounded-[2rem] shadow-[0_20px_40px_rgba(0,40,25,0.15)] flex flex-col items-center">
-            <span className="text-[9px] text-primary-fixed font-black uppercase tracking-widest mb-2 opacity-40">Global Rank</span>
+            <span className="text-[9px] text-primary-fixed font-black uppercase tracking-widest mb-2 opacity-70">Global Rank</span>
             <span className="text-4xl font-black tracking-tighter italic">#{globalRank}</span>
           </div>
         </div>
@@ -169,7 +170,7 @@ const Scores: React.FC = () => {
                     </>
                   )}
                 </button>
-                <p className="text-[9px] text-center text-on-surface-variant/40 font-black uppercase tracking-[0.1em] mt-6 italic leading-relaxed">Submitting a 6th round will replace <br/> your oldest verified data point.</p>
+                <p className="text-[9px] text-center text-on-surface-variant/80 font-black uppercase tracking-[0.1em] mt-6 italic leading-relaxed">Submitting a 6th round will replace <br/> your oldest verified data point.</p>
               </form>
            </motion.div>
         </div>
@@ -188,7 +189,7 @@ const Scores: React.FC = () => {
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="text-left text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant/40 border-b border-surface-container/50 bg-surface-container-lowest">
+                    <tr className="text-left text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant/70 border-b border-surface-container/50 bg-surface-container-lowest">
                       <th className="px-10 py-6">Status</th>
                       <th className="px-10 py-6">Date</th>
                       <th className="px-10 py-6">Course Name</th>
@@ -206,20 +207,20 @@ const Scores: React.FC = () => {
                           <td className="px-10 py-7">
                              <div className="flex items-center gap-3">
                                 <div className={`w-2 h-2 rounded-full ${idx === 0 ? 'bg-primary animate-pulse' : (idx === 4 ? 'bg-error' : 'bg-outline-variant/30')}`}></div>
-                                <span className={`text-[10px] font-black uppercase tracking-widest ${idx === 0 ? 'text-primary' : (idx === 4 ? 'text-error' : 'text-on-surface-variant/50')}`}>
+                                <span className={`text-[10px] font-black uppercase tracking-widest ${idx === 0 ? 'text-primary' : (idx === 4 ? 'text-error/80' : 'text-on-surface-variant/80')}`}>
                                    {idx === 0 ? 'Newest' : (idx === 4 ? 'Next to be Replaced' : 'Active')}
                                 </span>
                              </div>
                           </td>
                           <td className="px-10 py-7 text-sm font-bold text-on-surface/80">{getDayMonth(score.date)}</td>
-                          <td className="px-10 py-7 text-sm font-black text-primary/70 italic uppercase tracking-tight">{score.courseName || 'St. Andrews (Old)'}</td>
+                          <td className="px-10 py-7 text-sm font-black text-primary/80 italic uppercase tracking-tight">{score.courseName || 'St. Andrews (Old)'}</td>
                           <td className="px-10 py-7 text-right">
-                             <span className={`text-2xl font-black italic tracking-tighter ${idx === 4 ? 'text-error/30' : 'text-primary'}`}>{score.value}</span>
+                             <span className={`text-2xl font-black italic tracking-tighter ${idx === 4 ? 'text-error/60' : 'text-primary'}`}>{score.value}</span>
                           </td>
                        </motion.tr>
                     )) : (
                       <tr>
-                        <td colSpan={4} className="px-10 py-20 text-center text-on-surface-variant/40 font-bold italic">No scores logged yet.</td>
+                        <td colSpan={4} className="px-10 py-20 text-center text-on-surface-variant/80 font-bold italic">No scores logged yet.</td>
                       </tr>
                     )}
                   </tbody>
@@ -286,7 +287,7 @@ const Scores: React.FC = () => {
                    <span className="text-[10px] font-black uppercase tracking-widest italic">Scotland, UK</span>
                 </div>
                 <h5 className="text-4xl font-black text-white italic tracking-tighter uppercase mb-2">St. Andrews Links</h5>
-                <p className="text-white/60 font-medium italic">The Home of Golf.</p>
+                <p className="text-white/85 font-medium italic">The Home of Golf.</p>
               </div>
            </div>
            
@@ -313,7 +314,7 @@ const Scores: React.FC = () => {
       >
         <PlusCircle size={28} />
       </button>
-    </div>
+    </PageTransition>
   );
 };
 

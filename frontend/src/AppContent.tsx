@@ -1,5 +1,6 @@
 import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -25,24 +26,32 @@ import Perks from './pages/perks/Perks';
 import Notifications from './pages/notifications/Notifications';
 import ImpactReports from './pages/impact/ImpactReports';
 import Leaderboard from './pages/leaderboard/Leaderboard';
+import Privacy from './pages/support/Privacy';
+import Terms from './pages/support/Terms';
+import Support from './pages/support/Support';
 
 const AppContent: React.FC = () => {
   const { isSidebarOpen } = useSidebar();
   const { user } = useAuth();
+  const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-dark-900 text-slate-100 font-sans selection:bg-charity-500/30 selection:text-white flex flex-col">
+    <div className="min-h-screen bg-background text-on-background font-sans selection:bg-charity-500/30 selection:text-white flex flex-col">
       <Navbar />
       <Sidebar />
       
       <main className={`flex-grow pt-16 transition-all duration-300 ${user && isSidebarOpen ? 'lg:ml-64' : 'ml-0'}`}>
-        <Routes>
+        <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/charities" element={<Charities />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/support" element={<Support />} />
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoute />}>
@@ -73,18 +82,19 @@ const AppContent: React.FC = () => {
           } />
 
         </Routes>
+        </AnimatePresence>
       </main>
       
-      <footer className={`border-t border-slate-800/50 py-20 bg-dark-950 px-4 mt-auto transition-all duration-300 ${user && isSidebarOpen ? 'lg:ml-64' : 'ml-0'}`}>
+      <footer className={`border-t border-slate-800/50 py-20 bg-dark-950 text-slate-400 px-4 mt-auto transition-all duration-300 ${user && isSidebarOpen ? 'lg:ml-64' : 'ml-0'}`}>
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="text-center md:text-left">
             <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-2">Golf Charity <span className="text-charity-600">Platform</span></h3>
             <p className="text-slate-500 text-sm font-medium tracking-tight">The world's leading impact-driven golfer community.</p>
           </div>
           <div className="flex space-x-10 text-slate-500 text-xs font-black uppercase tracking-widest">
-            <Link to="/" className="hover:text-charity-500 transition-colors">Privacy</Link>
-            <Link to="/" className="hover:text-charity-500 transition-colors">Terms</Link>
-            <Link to="/" className="hover:text-charity-500 transition-colors">Support</Link>
+            <Link to="/privacy" className="hover:text-charity-500 transition-colors">Privacy</Link>
+            <Link to="/terms" className="hover:text-charity-500 transition-colors">Terms</Link>
+            <Link to="/support" className="hover:text-charity-500 transition-colors">Support</Link>
           </div>
           <div className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em]">
             &copy; {new Date().getFullYear()} G.C.P International

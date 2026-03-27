@@ -8,12 +8,13 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import PageTransition from '../../components/animations/PageTransition';
 
 const ImpactReports = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-14">
+    <PageTransition className="p-6 lg:p-10 max-w-7xl mx-auto space-y-14">
 
       {/* Hero Section */}
       <motion.section
@@ -29,18 +30,18 @@ const ImpactReports = () => {
           <h1 className="text-5xl lg:text-6xl font-black text-[#002819] tracking-tight leading-[1.05]">
             12,400+<br />Trees Planted
           </h1>
-          <p className="text-base text-on-surface-variant/60 font-medium leading-relaxed max-w-md">
+          <p className="text-base text-on-surface-variant/80 font-medium leading-relaxed max-w-md">
             The Clubhouse has reached a historic milestone, championing biodiversity and securing carbon offsets for future generations.
           </p>
           <div className="flex items-end gap-6 pt-2">
             <div>
               <span className="text-4xl font-black text-primary tracking-tight">90%</span>
-              <p className="text-[9px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] mt-1">Goal Reached</p>
+              <p className="text-[9px] font-black text-on-surface-variant/70 uppercase tracking-[0.2em] mt-1">Goal Reached</p>
             </div>
             <div className="h-12 w-px bg-black/[0.06]"></div>
             <div>
               <span className="text-4xl font-black text-[#002819] tracking-tight">$2.1M</span>
-              <p className="text-[9px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] mt-1">Total Mobilized</p>
+              <p className="text-[9px] font-black text-on-surface-variant/70 uppercase tracking-[0.2em] mt-1">Total Mobilized</p>
             </div>
           </div>
         </div>
@@ -177,9 +178,9 @@ const ImpactReports = () => {
           </div>
           <div className="p-8 space-y-4">
             <div className="flex items-center gap-3">
-              <span className="text-[9px] font-black text-on-surface-variant/30 uppercase tracking-[0.2em]">Newsroom</span>
-              <span className="text-[9px] text-on-surface-variant/20">—</span>
-              <span className="text-[9px] font-medium text-on-surface-variant/30">Oct 12, 2024</span>
+              <span className="text-[9px] font-black text-on-surface-variant/70 uppercase tracking-[0.2em]">Newsroom</span>
+              <span className="text-[9px] text-on-surface-variant/60">—</span>
+              <span className="text-[9px] font-medium text-on-surface-variant/70">Oct 12, 2024</span>
             </div>
             <h4 className="text-lg font-black text-[#002819] tracking-tight">The Future of Sustainable Fairways</h4>
             <p className="text-xs text-on-surface-variant/50 font-medium leading-relaxed">
@@ -221,7 +222,7 @@ const ImpactReports = () => {
           </button>
         </div>
       </motion.section>
-    </div>
+    </PageTransition>
   );
 };
 

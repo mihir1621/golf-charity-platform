@@ -8,6 +8,7 @@ import {
   TrendingUp,
   PlusCircle
 } from 'lucide-react';
+import PageTransition from '../../components/animations/PageTransition';
 
 const Draws = () => {
   const latestNumbers = ['08', '15', '23', '31', '42'];
@@ -20,7 +21,7 @@ const Draws = () => {
   ];
 
   return (
-    <div className="p-8 space-y-12 max-w-7xl mx-auto">
+    <PageTransition className="p-8 space-y-12 max-w-7xl mx-auto">
       {/* Top Section: Jackpot Hero & Rollover History */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Jackpot Hero */}
@@ -104,7 +105,7 @@ const Draws = () => {
           <div className="flex justify-between items-start mb-12">
             <div>
               <h2 className="text-3xl font-black text-on-surface italic uppercase tracking-tighter mb-2">Latest Draw Results</h2>
-              <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest">Sunday, May 19 • Draw #452</p>
+              <p className="text-[10px] font-black text-on-surface-variant/70 uppercase tracking-widest">Sunday, May 19 • Draw #452</p>
             </div>
             <div className="px-4 py-1.5 bg-primary text-secondary text-[9px] font-black rounded-full uppercase tracking-widest border border-primary">
               Official
@@ -115,12 +116,12 @@ const Draws = () => {
             {latestNumbers.map((num) => (
               <div 
                 key={num} 
-                className="w-16 h-16 rounded-full border-2 border-on-surface flex items-center justify-center text-2xl font-black italic group hover:bg-on-surface hover:text-white transition-all duration-300"
+                className="w-16 h-16 rounded-full border-2 border-on-surface flex items-center justify-center text-2xl font-black italic text-on-surface group hover:bg-on-surface hover:text-white transition-all duration-300"
               >
                 {num}
               </div>
             ))}
-            <div className="w-16 h-16 rounded-full bg-[#fed65b] flex items-center justify-center text-2xl font-black italic shadow-lg shadow-secondary/20">
+            <div className="w-16 h-16 rounded-full bg-[#fed65b] flex items-center justify-center text-2xl font-black italic text-on-surface shadow-lg shadow-secondary/20">
               {bonusNumber}
             </div>
           </div>
@@ -129,23 +130,23 @@ const Draws = () => {
              <div className="flex items-center justify-between p-6 bg-surface-container-low/30 rounded-2xl border border-transparent hover:border-outline-variant/10 transition-all">
                 <div className="flex items-center gap-6">
                    <span className="px-3 py-1 bg-primary/10 text-primary text-[9px] font-black rounded-md uppercase tracking-widest italic">5 Match</span>
-                   <span className="text-sm font-black text-on-surface/60 uppercase">1 Winner</span>
+                   <span className="text-sm font-black text-on-surface/80 uppercase">1 Winner</span>
                 </div>
                 <span className="text-xl font-black text-primary italic">£50,000.00</span>
              </div>
              
              <div className="flex items-center justify-between p-6 bg-surface-container-low/30 rounded-2xl border border-transparent hover:border-outline-variant/10 transition-all">
                 <div className="flex items-center gap-6">
-                   <span className="px-3 py-1 bg-surface-container-high text-on-surface/40 text-[9px] font-black rounded-md uppercase tracking-widest italic">4 Match</span>
-                   <span className="text-sm font-black text-on-surface/60 uppercase">24 Winners</span>
+                   <span className="px-3 py-1 bg-surface-container-high text-on-surface/70 text-[9px] font-black rounded-md uppercase tracking-widest italic">4 Match</span>
+                   <span className="text-sm font-black text-on-surface/80 uppercase">24 Winners</span>
                 </div>
                 <span className="text-xl font-black text-on-surface/80 italic">£2,450.00</span>
              </div>
 
              <div className="flex items-center justify-between p-6 bg-surface-container-low/30 rounded-2xl border border-transparent hover:border-outline-variant/10 transition-all">
                 <div className="flex items-center gap-6">
-                   <span className="px-3 py-1 bg-surface-container-high text-on-surface/40 text-[9px] font-black rounded-md uppercase tracking-widest italic">3 Match</span>
-                   <span className="text-sm font-black text-on-surface/60 uppercase">582 Winners</span>
+                   <span className="px-3 py-1 bg-surface-container-high text-on-surface/70 text-[9px] font-black rounded-md uppercase tracking-widest italic">3 Match</span>
+                   <span className="text-sm font-black text-on-surface/80 uppercase">582 Winners</span>
                 </div>
                 <span className="text-xl font-black text-on-surface/80 italic">£25.00</span>
              </div>
@@ -189,7 +190,7 @@ const Draws = () => {
                    </div>
                    <div>
                      <p className="text-md font-black text-primary leading-tight italic uppercase tracking-tight">£50,000 Winner</p>
-                     <p className="text-[9px] font-black text-on-surface-variant uppercase tracking-widest opacity-40">Oxfordshire Chapter</p>
+                     <p className="text-[9px] font-black text-on-surface-variant uppercase tracking-widest opacity-70">Oxfordshire Chapter</p>
                    </div>
                 </div>
                 
@@ -225,7 +226,7 @@ const Draws = () => {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="text-left text-[9px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 border-b border-surface-container bg-surface-container-low/20">
+              <tr className="text-left text-[9px] font-black uppercase tracking-[0.2em] text-on-surface-variant/70 border-b border-surface-container bg-surface-container-low/20">
                 <th className="px-12 py-10">Draw Date</th>
                 <th className="px-12 py-10">Winning Combination</th>
                 <th className="px-12 py-10">Jackpot Size</th>
@@ -271,7 +272,7 @@ const Draws = () => {
           </div>
         </div>
       </motion.section>
-    </div>
+    </PageTransition>
   );
 };
 

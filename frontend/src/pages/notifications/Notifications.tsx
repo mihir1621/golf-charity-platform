@@ -9,6 +9,7 @@ import {
   CheckCheck
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import PageTransition from '../../components/animations/PageTransition';
 
 interface NotificationItem {
   icon: React.ReactNode;
@@ -97,7 +98,7 @@ const Notifications = () => {
   ];
 
   return (
-    <div className="p-6 lg:p-10 max-w-4xl mx-auto space-y-10">
+    <PageTransition className="p-6 lg:p-10 max-w-4xl mx-auto space-y-10">
 
       {/* Page Header */}
       <motion.div
@@ -107,7 +108,7 @@ const Notifications = () => {
       >
         <div>
           <h1 className="text-4xl font-black text-[#002819] tracking-tight">Notification Center</h1>
-          <p className="text-sm text-on-surface-variant/50 font-medium mt-2 max-w-md leading-relaxed">
+          <p className="text-sm text-on-surface-variant/80 font-medium mt-2 max-w-md leading-relaxed">
             Stay updated on your membership status, impact goals, and exclusive clubhouse updates.
           </p>
         </div>
@@ -168,13 +169,13 @@ const Notifications = () => {
                           {item.title}
                         </h4>
                         <div className="flex items-center gap-2 flex-shrink-0">
-                          <span className="text-[11px] font-medium text-on-surface-variant/40">{item.time}</span>
+                          <span className="text-[11px] font-medium text-on-surface-variant/70">{item.time}</span>
                           {item.unread && (
                             <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
                           )}
                         </div>
                       </div>
-                      <p className="text-xs text-on-surface-variant/50 font-medium leading-relaxed">
+                      <p className="text-xs text-on-surface-variant/80 font-medium leading-relaxed">
                         {item.description}
                       </p>
 
@@ -203,7 +204,7 @@ const Notifications = () => {
           </motion.section>
         ))}
       </div>
-    </div>
+    </PageTransition>
   );
 };
 

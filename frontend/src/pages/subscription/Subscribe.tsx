@@ -12,6 +12,7 @@ import {
   Zap,
   ChevronRight
 } from 'lucide-react';
+import PageTransition from '../../components/animations/PageTransition';
 
 const plans = [
   {
@@ -69,7 +70,7 @@ const Subscribe: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-16 space-y-20">
+    <PageTransition className="max-w-7xl mx-auto px-6 py-16 space-y-20">
       {/* Header Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -136,7 +137,7 @@ const Subscribe: React.FC = () => {
               </p>
               <div className="flex items-baseline">
                 <span className={`text-6xl font-black tracking-tighter italic ${plan.featured ? 'text-[#fed65b]' : 'text-primary'}`}>{plan.price}</span>
-                <span className={`text-xs font-black ml-3 uppercase tracking-widest opacity-40 italic ${plan.featured ? 'text-white' : 'text-on-surface-variant'}`}>{plan.period}</span>
+                <span className={`text-xs font-black ml-3 uppercase tracking-widest opacity-80 italic ${plan.featured ? 'text-white' : 'text-on-surface-variant'}`}>{plan.period}</span>
               </div>
             </div>
 
@@ -187,7 +188,7 @@ const Subscribe: React.FC = () => {
                <ShieldCheck size={32} />
             </div>
             <h4 className="text-xl font-black italic uppercase tracking-tight mb-4 text-on-surface">Secure Payments</h4>
-            <p className="text-xs font-medium text-on-surface-variant italic opacity-60 leading-relaxed">Enterprise-grade encryption powered by Stripe Connect.</p>
+            <p className="text-xs font-medium text-on-surface-variant italic opacity-85 leading-relaxed">Enterprise-grade encryption powered by Stripe Connect.</p>
          </motion.div>
 
          <motion.div 
@@ -200,7 +201,7 @@ const Subscribe: React.FC = () => {
                <Target size={32} />
             </div>
             <h4 className="text-xl font-black italic uppercase tracking-tight mb-4 text-on-surface">Impact Verified</h4>
-            <p className="text-xs font-medium text-on-surface-variant italic opacity-60 leading-relaxed">Every dollar contributed is tracked with real-time analytics.</p>
+            <p className="text-xs font-medium text-on-surface-variant italic opacity-85 leading-relaxed">Every dollar contributed is tracked with real-time analytics.</p>
          </motion.div>
 
          <motion.div 
@@ -213,7 +214,7 @@ const Subscribe: React.FC = () => {
                <Zap size={32} />
             </div>
             <h4 className="text-xl font-black italic uppercase tracking-tight mb-4 text-on-surface">Instant Access</h4>
-            <p className="text-xs font-medium text-on-surface-variant italic opacity-60 leading-relaxed">Unlock the Clubhouse and start tracking rounds immediately.</p>
+            <p className="text-xs font-medium text-on-surface-variant italic opacity-85 leading-relaxed">Unlock the Clubhouse and start tracking rounds immediately.</p>
          </motion.div>
       </div>
       
@@ -228,7 +229,7 @@ const Subscribe: React.FC = () => {
                  </div>
                ))}
             </div>
-            <p className="text-white/60 font-medium italic mb-10 leading-relaxed">
+            <p className="text-white/85 font-medium italic mb-10 leading-relaxed">
                "The impact-first approach of the Digital Clubhouse has transformed how I view my weekend rounds. It's more than just golf."
             </p>
             <div className="flex items-center justify-center gap-4 text-secondary font-black text-xs uppercase tracking-widest italic">
@@ -238,7 +239,7 @@ const Subscribe: React.FC = () => {
          </div>
          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-secondary/5 to-transparent"></div>
       </section>
-    </div>
+    </PageTransition>
   );
 };
 

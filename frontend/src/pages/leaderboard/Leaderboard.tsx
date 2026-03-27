@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../api/apiClient';
+import PageTransition from '../../components/animations/PageTransition';
 
 interface LeaderboardEntry {
   userId: string;
@@ -68,7 +69,7 @@ const Leaderboard: React.FC = () => {
   );
 
   return (
-    <div className="p-6 lg:p-10 max-w-7xl mx-auto space-y-10">
+    <PageTransition className="p-6 lg:p-10 max-w-7xl mx-auto space-y-10">
       {/* Hero Header */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
@@ -82,7 +83,7 @@ const Leaderboard: React.FC = () => {
           <h1 className="text-5xl lg:text-6xl font-black text-[#002819] tracking-tight italic uppercase">
             Global <span className="text-primary underline decoration-secondary/20 underline-offset-8">Leaders</span>
           </h1>
-          <p className="text-base text-on-surface-variant/50 font-medium leading-relaxed max-w-lg italic">
+          <p className="text-base text-on-surface-variant/80 font-medium leading-relaxed max-w-lg italic">
             The standard of excellence is set here. Every round logged contributes to your standing in the clubhouse ecosystem.
           </p>
         </div>
@@ -123,16 +124,16 @@ const Leaderboard: React.FC = () => {
         {/* Table Header */}
         <div className="grid grid-cols-12 gap-4 px-10 py-6 border-b border-black/[0.04] bg-[#fafafa]">
           <div className="col-span-1">
-            <span className="text-[9px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] italic">Rank</span>
+            <span className="text-[9px] font-black text-on-surface-variant/70 uppercase tracking-[0.2em] italic">Rank</span>
           </div>
           <div className="col-span-4">
-            <span className="text-[9px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] italic">Player / Club</span>
+            <span className="text-[9px] font-black text-on-surface-variant/80 uppercase tracking-[0.2em] italic">Player / Club</span>
           </div>
           <div className="col-span-4">
-            <span className="text-[9px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] italic">Monthly points</span>
+            <span className="text-[9px] font-black text-on-surface-variant/80 uppercase tracking-[0.2em] italic">Monthly points</span>
           </div>
           <div className="col-span-3 text-right">
-            <span className="text-[9px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] italic">Avg / Round</span>
+            <span className="text-[9px] font-black text-on-surface-variant/80 uppercase tracking-[0.2em] italic">Avg / Round</span>
           </div>
         </div>
 
@@ -149,7 +150,7 @@ const Leaderboard: React.FC = () => {
             >
               {/* Rank */}
               <div className="col-span-1 flex items-center gap-2">
-                <span className={`text-lg font-black tracking-tighter italic ${entry.rank <= 3 ? 'text-secondary' : 'text-on-surface-variant/40'}`}>
+                <span className={`text-lg font-black tracking-tighter italic ${entry.rank <= 3 ? 'text-secondary' : 'text-on-surface-variant/80'}`}>
                   {String(entry.rank).padStart(2, '0')}
                 </span>
                 {entry.rank === 1 && <Crown size={14} className="text-[#c9a820]" />}
@@ -166,7 +167,7 @@ const Leaderboard: React.FC = () => {
                       {entry.name}
                     </span>
                   </div>
-                  <span className="text-[10px] text-on-surface-variant/40 font-black uppercase italic tracking-widest">{entry.club}</span>
+                  <span className="text-[10px] text-on-surface-variant/70 font-black uppercase italic tracking-widest">{entry.club}</span>
                 </div>
               </div>
 
@@ -179,13 +180,13 @@ const Leaderboard: React.FC = () => {
 
               {/* Avg Score */}
               <div className="col-span-3 text-right">
-                <span className={`text-lg font-black italic tracking-tighter ${entry.isYou ? 'text-primary' : 'text-on-surface-variant/40'}`}>
+                <span className={`text-lg font-black italic tracking-tighter ${entry.isYou ? 'text-primary' : 'text-on-surface-variant/80'}`}>
                   {entry.avgScore}
                 </span>
               </div>
             </div>
           )) : (
-            <div className="p-20 text-center text-on-surface-variant/40 italic font-medium">No results found matching your search.</div>
+            <div className="p-20 text-center text-on-surface-variant/80 italic font-medium">No results found matching your search.</div>
           )}
         </div>
       </motion.div>
@@ -203,7 +204,7 @@ const Leaderboard: React.FC = () => {
             <h3 className="text-3xl font-black text-[#fed65b] italic tracking-tighter uppercase">
               Clubhouse Invitations
             </h3>
-            <p className="text-base text-white/50 font-medium italic leading-relaxed">
+            <p className="text-base text-white/85 font-medium italic leading-relaxed">
               Top 10 golfers on the Global Leaderboard at the end of every quarter earn an all-expenses-paid trip to our Season Final at Pebble Beach.
             </p>
             <button
@@ -231,17 +232,17 @@ const Leaderboard: React.FC = () => {
             <h4 className="text-xl font-black text-[#002819] tracking-tighter uppercase italic mb-1">Global Community</h4>
             <div className="flex items-baseline gap-3 mt-4">
                <p className="text-5xl font-black text-primary italic tracking-tighter">{entries.length}</p>
-               <span className="text-[10px] font-black text-on-surface-variant/40 uppercase italic tracking-widest">Active Golfers</span>
+               <span className="text-[10px] font-black text-on-surface-variant/80 uppercase italic tracking-widest">Active Golfers</span>
             </div>
             <p className="text-[11px] text-secondary font-black uppercase italic tracking-widest mt-4">+12% growth since last draw</p>
           </div>
         </motion.div>
       </div>
       
-      <div className="text-center pb-8 opacity-20 text-[9px] font-black uppercase tracking-[0.4em] italic">
+      <div className="text-center pb-8 opacity-85 text-[9px] font-black uppercase tracking-[0.4em] italic">
          © 2026 Clubhouse. Global Standings Terminal.
       </div>
-    </div>
+    </PageTransition>
   );
 };
 

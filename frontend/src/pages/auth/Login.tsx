@@ -5,6 +5,7 @@ import { auth, googleProvider } from '../../config/firebase';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Loader2, Mail, Lock, Eye, EyeOff, Trophy } from 'lucide-react';
+import PageTransition from '../../components/animations/PageTransition';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -55,7 +56,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#f8f9f8] text-on-surface min-h-screen flex flex-col relative overflow-hidden selection:bg-primary/20">
+    <PageTransition className="bg-[#f8f9f8] text-on-surface min-h-screen flex flex-col relative overflow-hidden selection:bg-primary/20">
       {/* Background Decorative Blurs */}
       <div className="absolute top-[-15%] left-[-10%] w-[600px] h-[600px] rounded-full bg-primary/[0.04] blur-[120px] pointer-events-none"></div>
       <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-primary/[0.06] blur-[100px] pointer-events-none"></div>
@@ -106,7 +107,7 @@ const Login: React.FC = () => {
               {/* Welcome Header */}
               <div className="text-center mb-10">
                 <h2 className="text-3xl font-black text-[#002819] tracking-tight mb-3">Welcome Back</h2>
-                <p className="text-sm text-on-surface-variant/60 font-medium leading-relaxed max-w-xs mx-auto">
+                <p className="text-sm text-on-surface-variant/80 font-medium leading-relaxed max-w-xs mx-auto">
                   Access your digital clubhouse and impact dashboard.
                 </p>
               </div>
@@ -145,7 +146,7 @@ const Login: React.FC = () => {
                   <div className="relative group">
                     <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" size={18} />
                     <input
-                      className="w-full pl-13 pr-14 py-4 bg-transparent border-b-2 border-black/[0.08] focus:border-primary text-[#002819] placeholder:text-on-surface-variant/35 outline-none font-medium text-sm transition-colors"
+                      className="w-full pl-13 pr-14 py-4 bg-transparent border-b-2 border-black/[0.08] focus:border-primary text-[#002819] placeholder:text-on-surface-variant/70 outline-none font-medium text-sm transition-colors"
                       id="password"
                       required
                       placeholder="••••••••"
@@ -259,7 +260,7 @@ const Login: React.FC = () => {
           Supporting excellence on and off the course.
         </p>
       </footer>
-    </div>
+    </PageTransition>
   );
 };
 

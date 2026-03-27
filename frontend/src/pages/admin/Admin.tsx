@@ -10,6 +10,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import apiClient from '../../api/apiClient';
+import PageTransition from '../../components/animations/PageTransition';
 
 const Admin = () => {
   const [stats, setStats] = useState<any>(null);
@@ -58,12 +59,12 @@ const Admin = () => {
   );
 
   return (
-    <div className="p-8 space-y-12 max-w-7xl mx-auto">
+    <PageTransition className="p-8 space-y-12 max-w-7xl mx-auto">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row justify-between items-start gap-8">
         <div>
           <h1 className="text-4xl font-black text-on-surface tracking-tighter mb-2 italic uppercase">Administrative Overview</h1>
-          <p className="text-on-surface-variant font-medium italic opacity-60">Real-time performance metrics and ecosystem health.</p>
+          <p className="text-on-surface-variant font-medium italic opacity-85">Real-time performance metrics and ecosystem health.</p>
         </div>
         <button className="flex items-center gap-3 px-6 py-3 bg-white border border-outline-variant/10 rounded-xl text-[10px] font-black uppercase tracking-widest italic shadow-sm hover:shadow-md transition-all">
           <Download size={14} />
@@ -83,7 +84,7 @@ const Admin = () => {
                  <Users size={24} />
               </div>
            </div>
-           <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-2 opacity-40 italic">Active Subscribers</p>
+           <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-2 opacity-80 italic">Active Subscribers</p>
            <p className="text-4xl font-black italic tracking-tighter text-on-surface">{stats?.overview?.activeSubscribers || 0}</p>
         </motion.div>
 
@@ -98,7 +99,7 @@ const Admin = () => {
                  <DollarSign size={24} />
               </div>
            </div>
-           <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-2 opacity-40 italic">Rollover Pool</p>
+           <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-2 opacity-80 italic">Rollover Pool</p>
            <p className="text-4xl font-black italic tracking-tighter text-on-surface">${stats?.overview?.currentRollover || 0}</p>
         </motion.div>
 
@@ -113,7 +114,7 @@ const Admin = () => {
                  <Heart size={24} />
               </div>
            </div>
-           <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-2 opacity-40 italic">Charity Totals</p>
+           <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.2em] mb-2 opacity-80 italic">Charity Totals</p>
            <p className="text-4xl font-black italic tracking-tighter text-on-surface">${stats?.overview?.charityTotals || 0}</p>
         </motion.div>
       </div>
@@ -260,7 +261,7 @@ const Admin = () => {
       <div className="text-center pb-8 pt-12 opacity-30 text-[9px] font-black uppercase tracking-[0.3em] italic">
          © 2026 Clubhouse. Admin Secure Terminal.
       </div>
-    </div>
+    </PageTransition>
   );
 };
 

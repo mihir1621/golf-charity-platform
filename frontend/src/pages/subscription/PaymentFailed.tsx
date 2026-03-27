@@ -8,12 +8,13 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
+import PageTransition from '../../components/animations/PageTransition';
 
 const PaymentFailed = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#f8f9f8] flex flex-col selection:bg-primary/20">
+    <PageTransition className="min-h-screen bg-[#f8f9f8] flex flex-col selection:bg-primary/20">
       {/* Header */}
       <header className="px-12 py-8 flex justify-between items-center relative z-10">
         <Link to="/" className="text-xl font-black text-[#002819] italic tracking-tighter hover:opacity-80 transition-opacity">
@@ -49,7 +50,7 @@ const PaymentFailed = () => {
                   <h1 className="text-4xl font-black text-[#002819] tracking-tight">
                     Payment Unsuccessful
                   </h1>
-                  <p className="text-base text-on-surface-variant/60 font-medium leading-relaxed max-w-md">
+                  <p className="text-base text-on-surface-variant/85 font-medium leading-relaxed max-w-md">
                     We were unable to process your transaction for the{' '}
                     <em className="text-[#002819] font-bold not-italic italic">Masters Circle Membership</em>.
                     This usually happens due to temporary bank connectivity issues.
@@ -75,8 +76,8 @@ const PaymentFailed = () => {
 
                 {/* Security Note */}
                 <div className="flex items-center gap-2.5 pt-4">
-                  <ShieldCheck size={16} className="text-primary/40" />
-                  <span className="text-[11px] font-medium text-on-surface-variant/40 italic">
+                  <ShieldCheck size={16} className="text-primary/70" />
+                  <span className="text-[11px] font-medium text-on-surface-variant/75 italic">
                     Secure transaction handled by Fairway Protocol
                   </span>
                 </div>
@@ -131,7 +132,7 @@ const PaymentFailed = () => {
                 <HelpCircle className="absolute top-6 right-6 text-white/[0.06]" size={80} />
                 <div className="relative z-10 space-y-4">
                   <h4 className="text-base font-black text-white">Need assistance?</h4>
-                  <p className="text-sm text-white/50 font-medium leading-relaxed">
+                  <p className="text-sm text-white/80 font-medium leading-relaxed">
                     Our concierge team is available to help resolve any billing issues immediately.
                   </p>
                   <button className="text-[#fed65b] text-sm font-bold flex items-center gap-2 hover:gap-3 transition-all mt-2 group">
@@ -160,7 +161,7 @@ const PaymentFailed = () => {
           © 2024 Fairway Fund. The Digital Clubhouse.
         </span>
       </footer>
-    </div>
+    </PageTransition>
   );
 };
 

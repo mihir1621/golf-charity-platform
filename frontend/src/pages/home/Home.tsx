@@ -2,10 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Trophy, Heart, Shield, Globe, Users } from 'lucide-react';
+import PageTransition from '../../components/animations/PageTransition';
 
 const Home: React.FC = () => {
   return (
-    <div className="bg-[#f7f9fb] text-[#191c1e] antialiased font-sans selection:bg-[#fed65b] selection:text-[#002819] overflow-x-hidden">
+    <PageTransition className="bg-[#f7f9fb] text-[#191c1e] antialiased font-sans selection:bg-[#fed65b] selection:text-[#002819] overflow-x-hidden">
       <main className="pt-0">
         {/* --- HERO SECTION --- Fully Responsive --- */}
         <section className="relative min-h-[70vh] md:min-h-[85vh] flex items-center overflow-hidden bg-white pt-16">
@@ -107,7 +108,7 @@ const Home: React.FC = () => {
                </div>
                <div className="absolute -bottom-6 -right-2 md:-bottom-10 md:-right-6 bg-[#735c00] p-6 md:p-10 rounded-2xl md:rounded-3xl z-20 shadow-2xl border border-white/10 flex flex-col items-center">
                   <p className="text-white font-black text-3xl md:text-5xl mb-1 tracking-tighter italic">2.4M+</p>
-                  <p className="text-white/60 text-[8px] md:text-[10px] font-black tracking-[0.2em] uppercase whitespace-nowrap italic">Impact Raised</p>
+                  <p className="text-white/85 text-[8px] md:text-[10px] font-black tracking-[0.2em] uppercase whitespace-nowrap italic">Impact Raised</p>
                </div>
             </div>
             
@@ -185,7 +186,7 @@ const Home: React.FC = () => {
           <div className="bg-[#002819] rounded-[2rem] md:rounded-[4rem] p-10 md:p-24 text-center shadow-2xl relative overflow-hidden">
              <div className="relative z-10">
                 <h2 className="text-4xl sm:text-5xl md:text-[8rem] font-black text-white italic tracking-tighter mb-8 md:mb-10 leading-[1.1] uppercase">Ready to tee off?</h2>
-                <p className="text-white/60 text-base md:text-2xl max-w-2xl mx-auto mb-10 md:mb-16 font-medium italic">Join thousands of golfers worldwide turning birdies into breakthroughs.</p>
+                <p className="text-white/85 text-base md:text-2xl max-w-2xl mx-auto mb-10 md:mb-16 font-medium italic">Join thousands of golfers worldwide turning birdies into breakthroughs.</p>
                 <div className="flex flex-col sm:flex-row justify-center items-center gap-6 md:gap-10">
                    <Link to="/signup" className="w-full sm:w-auto bg-[#fed65b] text-[#002819] px-10 md:px-14 py-4 md:py-6 rounded-xl md:rounded-2xl font-black text-lg md:text-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl uppercase italic">Join the Fund</Link>
                    <Link to="/charities" className="text-white/80 hover:text-white transition-colors font-black uppercase text-sm md:text-xl tracking-tighter underline underline-offset-8 italic">Contact Sales</Link>
@@ -204,24 +205,24 @@ const Home: React.FC = () => {
           </div>
           {['Platform', 'Charity', 'Company'].map((title, idx) => (
              <div key={idx} className="space-y-6 md:space-y-10">
-               <h4 className="font-black uppercase text-[9px] md:text-[10px] tracking-[0.3em] text-[#191c1e]/40">{title}</h4>
+               <h4 className="font-black uppercase text-[9px] md:text-[10px] tracking-[0.3em] text-[#191c1e]/75">{title}</h4>
                <ul className="space-y-3 md:space-y-5 font-bold text-xs md:text-sm">
                   {title === 'Platform' && ['Draws', 'Leaderboards', 'Clubhouse'].map(l => <li key={l}><Link to={l === 'Draws' ? '/draws' : l === 'Leaderboards' ? '/leaderboard' : '/dashboard'} className="hover:text-[#745c00]">{l}</Link></li>)}
                   {title === 'Charity' && ['Partners', 'Impact', 'Apply'].map(l => <li key={l}><Link to={l === 'Partners' ? '/charities' : l === 'Impact' ? '/impact' : '/signup'} className="hover:text-[#745c00]">{l}</Link></li>)}
-                  {title === 'Company' && ['About', 'Support', 'Legal'].map(l => <li key={l}><Link to="/" className="hover:text-[#745c00]">{l}</Link></li>)}
+                  {title === 'Company' && ['About', 'Support', 'Legal'].map(l => <li key={l}><Link to={l === 'Support' ? '/support' : l === 'Legal' ? '/terms' : '/'} className="hover:text-[#745c00]">{l}</Link></li>)}
                </ul>
              </div>
           ))}
         </div>
-        <div className="max-w-7xl mx-auto pt-10 md:pt-20 mt-12 md:mt-24 border-t border-[#eceef0] flex flex-col md:flex-row justify-between items-center gap-6 text-[8px] md:text-[10px] text-[#191c1e]/40 font-black tracking-widest uppercase">
+        <div className="max-w-7xl mx-auto pt-10 md:pt-20 mt-12 md:mt-24 border-t border-[#eceef0] flex flex-col md:flex-row justify-between items-center gap-6 text-[8px] md:text-[10px] text-[#191c1e]/75 font-black tracking-widest uppercase">
            <p>© 2026 Digital Clubhouse. All rights reserved.</p>
            <div className="flex gap-6 md:gap-10">
-              <Link to="/">Privacy</Link>
-              <Link to="/">Terms</Link>
+              <Link to="/privacy">Privacy</Link>
+              <Link to="/terms">Terms</Link>
            </div>
         </div>
       </footer>
-    </div>
+    </PageTransition>
   );
 };
 

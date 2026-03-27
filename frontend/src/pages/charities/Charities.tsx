@@ -14,6 +14,7 @@ import {
   Backpack
 } from 'lucide-react';
 import apiClient from '../../api/apiClient';
+import PageTransition from '../../components/animations/PageTransition';
 
 const ICON_MAP: Record<string, any> = {
   'education': <Backpack size={18} />,
@@ -68,7 +69,7 @@ const Charities: React.FC = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12 space-y-16">
+    <PageTransition className="max-w-7xl mx-auto px-6 py-12 space-y-16">
       {/* Header & Feature Spotlight */}
       <div className="flex flex-col lg:flex-row justify-between items-stretch gap-12">
         <div className="max-w-2xl flex flex-col justify-center">
@@ -149,13 +150,13 @@ const Charities: React.FC = () => {
                 <h3 className="text-xl font-black text-on-surface italic uppercase tracking-tight">{charity.name}</h3>
                 <span className="text-[9px] font-black bg-primary/5 text-primary px-2.5 py-1 rounded-md uppercase tracking-widest leading-none border border-primary/5 italic">5% Sub Share</span>
               </div>
-              <p className="text-xs font-medium text-on-surface-variant leading-relaxed mb-6 opacity-60 italic h-16 overflow-hidden">
-                 {charity.description}
-              </p>
-              
-              <div className="mb-8 pt-6 border-t border-surface-container/50 flex justify-between items-end">
-                <div>
-                   <p className="text-[8px] font-black text-on-surface-variant uppercase italic opacity-40 mb-1">Total Impact Value</p>
+               <p className="text-xs font-medium text-on-surface-variant leading-relaxed mb-6 opacity-80 italic h-16 overflow-hidden">
+                  {charity.description}
+               </p>
+               
+               <div className="mb-8 pt-6 border-t border-surface-container/50 flex justify-between items-end">
+                 <div>
+                    <p className="text-[8px] font-black text-on-surface-variant uppercase italic opacity-70 mb-1">Total Impact Value</p>
                    <p className="text-lg font-black text-on-surface italic tracking-tight">${charity.totalRaised || 0}</p>
                 </div>
                 {charity.featured && <Sparkles size={16} className="text-[#fed65b]" />}
@@ -183,10 +184,10 @@ const Charities: React.FC = () => {
         ))}
       </div>
 
-      <div className="text-center pb-12 opacity-30 text-[9px] font-black uppercase tracking-[0.3em] italic">
+      <div className="text-center pb-12 opacity-60 text-[9px] font-black uppercase tracking-[0.3em] italic">
          © 2026 Clubhouse Impact Network. All contributions are subject to external audit.
       </div>
-    </div>
+    </PageTransition>
   );
 };
 

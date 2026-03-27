@@ -13,6 +13,7 @@ import {
 import { useNavigate, Link } from 'react-router-dom';
 import { auth } from '../../config/firebase';
 import { sendPasswordResetEmail } from 'firebase/auth';
+import PageTransition from '../../components/animations/PageTransition';
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f9f8] flex flex-col selection:bg-primary/20">
+    <PageTransition className="min-h-screen bg-[#f8f9f8] flex flex-col selection:bg-primary/20">
       {/* Dynamic Header */}
       <header className="px-12 py-10 flex justify-between items-center relative z-10">
         <Link to="/" className="text-2xl font-black text-[#002819] italic tracking-tighter hover:opacity-80 transition-opacity">
@@ -47,10 +48,10 @@ const ForgotPassword = () => {
         </Link>
         <button 
           onClick={() => navigate('/login')}
-          className="flex items-center gap-2 text-xs font-black text-on-surface-variant uppercase tracking-widest italic hover:text-primary transition-colors"
+          className="flex items-center gap-2 text-xs font-black text-on-surface uppercase tracking-widest italic hover:text-primary transition-colors"
         >
           Back to Login
-          <HelpCircle size={16} className="text-on-surface-variant/40" />
+          <HelpCircle size={16} className="text-on-surface-variant/80" />
         </button>
       </header>
 
@@ -76,7 +77,7 @@ const ForgotPassword = () => {
                  
                  <div className="space-y-4">
                     <h1 className="text-4xl font-black text-[#002819] italic tracking-tighter uppercase">Reset your access</h1>
-                    <p className="text-on-surface-variant text-sm font-medium italic opacity-60 max-w-sm mx-auto leading-relaxed">
+                    <p className="text-on-surface-variant text-sm font-medium italic opacity-85 max-w-sm mx-auto leading-relaxed">
                       Enter the email address associated with your Fairway Fund account and we'll send you a secure link to reset your password.
                     </p>
                  </div>
@@ -190,7 +191,7 @@ const ForgotPassword = () => {
       <footer className="px-12 py-12 border-t border-outline-variant/5 flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="flex flex-col md:flex-row items-center gap-8">
            <span className="text-lg font-black text-[#002819] italic tracking-tighter">Fairway Fund</span>
-           <span className="text-[9px] font-bold text-on-surface-variant/40 uppercase tracking-widest italic">© 2024 Fairway Fund. The Digital Clubhouse.</span>
+           <span className="text-[9px] font-bold text-on-surface-variant/70 uppercase tracking-widest italic">© 2024 Fairway Fund. The Digital Clubhouse.</span>
         </div>
         <div className="flex items-center gap-8">
            {['Support', 'Privacy Policy', 'Terms of Service'].map(link => (
@@ -200,7 +201,7 @@ const ForgotPassword = () => {
            ))}
         </div>
       </footer>
-    </div>
+    </PageTransition>
   );
 };
 

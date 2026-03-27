@@ -8,6 +8,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import PageTransition from '../../components/animations/PageTransition';
 
 const Perks = () => {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ const Perks = () => {
   ];
 
   return (
-    <div className="p-6 lg:p-10 space-y-12 max-w-7xl mx-auto">
+    <PageTransition className="p-6 lg:p-10 space-y-12 max-w-7xl mx-auto">
 
       {/* Hero Banner */}
       <motion.section
@@ -62,8 +63,8 @@ const Perks = () => {
           <h1 className="text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.1] mb-5">
             The Perks of<br />Partnership.
           </h1>
-          <p className="text-sm text-white/60 font-medium leading-relaxed mb-8 max-w-sm">
-            Unlock a world of curated benefits designed for the modern golfer. From elite gear to global luxury travel, your membership transcends the fairway.
+          <p className="text-sm text-white/85 font-medium leading-relaxed mb-8 max-w-sm">
+            Unlock a world of curated benefits designed for the modern golfer. From elite gear to global luxury luxury travel, your membership transcends the fairway.
           </p>
           <div className="flex flex-wrap gap-4">
             <button className="px-6 py-3.5 bg-[#fed65b] text-[#002819] rounded-xl font-bold text-xs hover:scale-105 active:scale-95 transition-all shadow-lg">
@@ -85,7 +86,7 @@ const Perks = () => {
             className={`pb-4 text-sm font-bold transition-all relative ${
               activeTab === tab
                 ? 'text-[#002819]'
-                : 'text-on-surface-variant/40 hover:text-on-surface-variant/70'
+                : 'text-on-surface-variant/70 hover:text-on-surface-variant/90'
             }`}
           >
             {tab}
@@ -143,7 +144,7 @@ const Perks = () => {
               <ShoppingBag size={20} className="text-[#c9a820]" />
             </div>
             <h4 className="text-lg font-black text-[#002819] tracking-tight">Pro Shop Discounts</h4>
-            <p className="text-xs text-on-surface-variant/50 font-medium leading-relaxed">
+            <p className="text-xs text-on-surface-variant/80 font-medium leading-relaxed">
               Save up to 25% on premium labels including Callaway, Titleist, and Galvin Green through our member portal.
             </p>
           </div>
@@ -166,7 +167,7 @@ const Perks = () => {
               <Ticket size={20} className="text-[#fed65b]" />
             </div>
             <h4 className="text-lg font-black text-white tracking-tight">Early Event Access</h4>
-            <p className="text-xs text-white/50 font-medium leading-relaxed">
+            <p className="text-xs text-white/80 font-medium leading-relaxed">
               Be the first to secure tickets for the Masters and The Open championships.
             </p>
           </div>
@@ -205,7 +206,7 @@ const Perks = () => {
                     <span className="text-[8px] font-black bg-[#fed65b] text-[#002819] px-2.5 py-1 rounded-full uppercase tracking-widest">Active</span>
                   )}
                 </div>
-                <p className="text-xs text-on-surface-variant/50 font-medium leading-relaxed">
+                <p className="text-xs text-on-surface-variant/80 font-medium leading-relaxed">
                   {p.description}
                 </p>
                 <button className="w-full py-3.5 border border-black/[0.06] rounded-xl text-xs font-bold text-[#002819] hover:bg-[#f5f5f5] transition-colors">
@@ -237,7 +238,7 @@ const Perks = () => {
           Upgrade Now
         </button>
       </motion.section>
-    </div>
+    </PageTransition>
   );
 };
 

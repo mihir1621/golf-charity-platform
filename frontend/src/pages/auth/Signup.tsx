@@ -5,6 +5,7 @@ import { auth, googleProvider } from '../../config/firebase';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import PageTransition from '../../components/animations/PageTransition';
 
 const charities = [
   { id: 'youth', name: 'Junior Golf Development' },
@@ -80,7 +81,7 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <div className="bg-surface text-on-surface min-h-screen flex flex-col items-center justify-center p-6 sm:p-12 relative overflow-hidden">
+    <PageTransition className="bg-surface text-on-surface min-h-screen flex flex-col items-center justify-center p-6 sm:p-12 relative overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute top-[-10%] right-[-10%] w-[40rem] h-[40rem] rounded-full bg-primary-fixed/20 blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-[-5%] left-[-5%] w-[30rem] h-[30rem] rounded-full bg-secondary-fixed/10 blur-[100px] pointer-events-none"></div>
@@ -122,7 +123,7 @@ const Signup: React.FC = () => {
                 </button>
                 <div className="relative flex py-6 items-center">
                   <div className="flex-grow border-t border-outline-variant/20"></div>
-                  <span className="flex-shrink mx-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40">Or register with email</span>
+                  <span className="flex-shrink mx-4 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70">Or register with email</span>
                   <div className="flex-grow border-t border-outline-variant/20"></div>
                 </div>
               </div>
@@ -167,7 +168,7 @@ const Signup: React.FC = () => {
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/60 text-[20px] z-10 pointer-events-none"></span>
                     <input
-                      className="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-none focus:ring-2 focus:ring-primary/10 transition-all rounded-2xl text-on-surface placeholder:text-on-surface-variant/50 outline-none font-medium text-sm relative"
+                      className="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-none focus:ring-2 focus:ring-primary/10 transition-all rounded-2xl text-on-surface placeholder:text-on-surface-variant/70 outline-none font-medium text-sm relative"
                       id="password"
                       name="password"
                       required
@@ -253,7 +254,7 @@ const Signup: React.FC = () => {
           <span className="absolute right-full mr-5 bg-primary text-on-primary text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">Need Help?</span>
         </button>
       </div>
-    </div>
+    </PageTransition>
   );
 };
 

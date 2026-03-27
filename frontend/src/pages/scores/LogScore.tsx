@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../../api/apiClient';
+import PageTransition from '../../components/animations/PageTransition';
 
 const LogScore: React.FC = () => {
   const navigate = useNavigate();
@@ -63,12 +64,12 @@ const LogScore: React.FC = () => {
         <CheckCircle2 size={120} />
       </motion.div>
       <h2 className="text-4xl font-black text-on-surface uppercase italic tracking-tighter mb-4" id="score-verified-title">Score Verified!</h2>
-      <p className="text-on-surface-variant font-medium opacity-60">Your round has been added to the monthly draw pool. Redirecting to your clubhouse...</p>
+      <p className="text-on-surface-variant font-medium opacity-85">Your round has been added to the monthly draw pool. Redirecting to your clubhouse...</p>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-surface-container-lowest flex flex-col max-w-md mx-auto relative shadow-2xl">
+    <PageTransition className="min-h-screen bg-surface-container-lowest flex flex-col max-w-md mx-auto relative shadow-2xl">
       {/* Mobile Top App Bar */}
       <div className="p-6 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-outline-variant/5">
         <button 
@@ -97,7 +98,7 @@ const LogScore: React.FC = () => {
              >
                 {score}
              </motion.div>
-             <span className="text-sm font-black text-on-surface-variant/40 ml-4 italic absolute -right-12 bottom-8">PTS</span>
+             <span className="text-sm font-black text-on-surface-variant/80 ml-4 italic absolute -right-12 bottom-8">PTS</span>
           </div>
 
           <div className="flex justify-center gap-6 mb-10">
@@ -115,7 +116,7 @@ const LogScore: React.FC = () => {
              </button>
           </div>
           
-          <p className="text-xs font-medium text-on-surface-variant italic opacity-60">Points must be within valid 1-45 range</p>
+          <p className="text-xs font-medium text-on-surface-variant italic opacity-85">Points must be within valid 1-45 range</p>
         </section>
 
         {/* Course Selection Section */}
@@ -175,7 +176,7 @@ const LogScore: React.FC = () => {
             )}
          </motion.button>
       </div>
-    </div>
+    </PageTransition>
   );
 };
 
