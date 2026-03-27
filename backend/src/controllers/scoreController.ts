@@ -5,7 +5,7 @@ import type { AuthRequest } from '../middleware/authMiddleware.js';
 export const addScore = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const uid = req.user?.uid;
-    const { value, date } = req.body;
+    const { value, date, courseName } = req.body;
 
     if (value < 1 || value > 45) {
       res.status(400).json({ error: 'Score value must be between 1 and 45' });
@@ -16,6 +16,7 @@ export const addScore = async (req: AuthRequest, res: Response): Promise<void> =
     const newScore = {
       userId: uid,
       value,
+      courseName: courseName || 'Unknown Course',
       date: new Date(date),
       createdAt: new Date()
     };
@@ -59,6 +60,48 @@ export const getScores = async (req: AuthRequest, res: Response): Promise<void> 
     const scores = scoresSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
     res.status(200).json(scores);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getLeaderboard = async (_req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const scoresSnapshot = await db.collection('scores').get();
+    const userTotals: Record<string, { totalPoints: number; rounds: number; displayName?: string; avatar?: string }> = {};
+
+    // Group and sum
+    scoresSnapshot.docs.forEach(doc => {
+      const data = doc.data();
+      const uid = data.userId;
+      if (!userTotals[uid]) {
+        userTotals[uid] = { totalPoints: 0, rounds: 0 };
+      }
+      userTotals[uid].totalPoints += data.value || 0;
+      userTotals[uid].rounds += 1;
+    });
+
+    // Fetch user profiles to get display names
+    const leaderboard = await Promise.all(
+      Object.entries(userTotals).map(async ([uid, stats]) => {
+        const userDoc = await db.collection('users').doc(uid).get();
+        const userData = userDoc.data();
+        return {
+          userId: uid,
+          name: userData?.displayName || 'Anonymous Player',
+          club: userData?.clubName || 'Local Club',
+          avatar: userData?.photoURL || `https://i.pravatar.cc/80?u=${uid}`,
+          totalPoints: stats.totalPoints,
+          rounds: stats.rounds,
+          avgScore: stats.rounds > 0 ? (stats.totalPoints / stats.rounds).toFixed(1) : 0
+        };
+      })
+    );
+
+    // Sort by points desc
+    leaderboard.sort((a, b) => b.totalPoints - a.totalPoints);
+
+    res.status(200).json(leaderboard);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

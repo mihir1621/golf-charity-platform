@@ -1,10 +1,13 @@
 import { Router } from 'express';
-import { getCharities, createCharity } from '../controllers/charityController.js';
+import { getCharities, createCharity, getFeaturedCharity, donateToCharity } from '../controllers/charityController.js';
 import { requireAuth } from '../middleware/authMiddleware.js';
 const router = Router();
-// /api/charities
-router.get('/', getCharities); // public or authenticated access depending on requirement
-// /api/charities (admin)
+// Public routes
+router.get('/', getCharities);
+router.get('/featured', getFeaturedCharity);
+// Protected routes
+router.post('/donate', requireAuth, donateToCharity);
+// Admin-protected routes (Auth checked in controller too)
 router.post('/', requireAuth, createCharity);
 export default router;
 //# sourceMappingURL=charityRoutes.js.map

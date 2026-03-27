@@ -1,30 +1,71 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   ChevronLeft, 
   Search, 
-  Calendar, 
-  Send
+  Send,
+  Loader2,
+  CheckCircle2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../../api/apiClient';
 
-const LogScore = () => {
+const LogScore: React.FC = () => {
   const navigate = useNavigate();
   const [score, setScore] = useState(18);
-  const [selectedCourse, setSelectedCourse] = useState('Augusta National');
-  const [dateType, setDateType] = useState<'today' | 'custom'>('today');
+  const [courseName, setCourseName] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [recentScores, setRecentScores] = useState<any[]>([]);
 
-  const recentScores = [
-    { date: '22 Oct', pts: 32, current: true },
-    { date: '15 Oct', pts: 28 },
-    { date: '08 Oct', pts: 35 },
-    { date: '01 Oct', pts: 30 },
-    { date: '24 Sep', pts: 26, status: 'OUT' },
-  ];
+  useEffect(() => {
+    fetchRecentScores();
+  }, []);
+
+  const fetchRecentScores = async () => {
+    try {
+      const res = await apiClient.get('/scores');
+      setRecentScores(res.data);
+    } catch (err) {
+      console.error('Error fetching scores:', err);
+    }
+  };
 
   const handleScoreChange = (delta: number) => {
-    setScore(prev => Math.max(0, Math.min(60, prev + delta)));
+    // PRD Section 06: Points range: 1–45
+    setScore(prev => Math.max(1, Math.min(45, prev + delta)));
   };
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    try {
+      await apiClient.post('/scores', {
+        value: score,
+        courseName: courseName || 'Local Course',
+        date: new Date().toISOString()
+      });
+      setSuccess(true);
+      setTimeout(() => navigate('/dashboard'), 2000);
+    } catch (err: any) {
+      alert(`Error logging score: ${err.response?.data?.error || err.message}`);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (success) return (
+    <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-[#f0fff4] to-white">
+      <motion.div 
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="text-primary mb-8"
+      >
+        <CheckCircle2 size={120} />
+      </motion.div>
+      <h2 className="text-4xl font-black text-on-surface uppercase italic tracking-tighter mb-4" id="score-verified-title">Score Verified!</h2>
+      <p className="text-on-surface-variant font-medium opacity-60">Your round has been added to the monthly draw pool. Redirecting to your clubhouse...</p>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-surface-container-lowest flex flex-col max-w-md mx-auto relative shadow-2xl">
@@ -37,15 +78,15 @@ const LogScore = () => {
            <ChevronLeft size={24} className="text-on-surface" />
         </button>
         <span className="text-sm font-black italic uppercase tracking-[0.2em] text-on-surface">Log Score</span>
-        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20">
-           <img src="https://i.pravatar.cc/100?u=jameson" alt="user" className="w-full h-full object-cover" />
+        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20 bg-primary/5 flex items-center justify-center text-primary font-black uppercase italic text-xs">
+           GL
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto pb-32">
         {/* Score Selector Section */}
         <section className="p-8 text-center bg-gradient-to-b from-white to-transparent">
-          <p className="text-[10px] font-black text-[#745c00] uppercase tracking-[0.3em] mb-12 italic">Current Round Performance</p>
+          <p className="text-[10px] font-black text-[#745c00] uppercase tracking-[0.3em] mb-12 italic">Target Stableford Points</p>
           
           <div className="relative inline-flex items-center justify-center mb-8">
              <motion.div 
@@ -74,100 +115,45 @@ const LogScore = () => {
              </button>
           </div>
           
-          <p className="text-xs font-medium text-on-surface-variant italic opacity-60">Adjust score for today's Stableford points</p>
+          <p className="text-xs font-medium text-on-surface-variant italic opacity-60">Points must be within valid 1-45 range</p>
         </section>
 
         {/* Course Selection Section */}
         <section className="p-8 space-y-6">
-           <h3 className="text-sm font-black text-on-surface italic uppercase tracking-tight">Course Location</h3>
+           <h3 className="text-sm font-black text-on-surface italic uppercase tracking-tight">Course Name</h3>
            <div className="relative group">
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" size={20} />
               <input 
                 type="text" 
-                placeholder="Search golf course..."
+                value={courseName}
+                onChange={(e) => setCourseName(e.target.value)}
+                placeholder="Enter golf course name..."
+                id="course-input"
                 className="w-full h-16 pl-14 pr-6 bg-white rounded-2xl border border-outline-variant/10 italic text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm"
               />
            </div>
-           
-           <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
-              {['Augusta National', 'St Andrews', 'Pebble Beach'].map(course => (
-                 <button
-                   key={course}
-                   onClick={() => setSelectedCourse(course)}
-                   className={`px-5 py-3 rounded-full text-[10px] font-black uppercase tracking-widest italic flex-shrink-0 transition-all ${
-                     selectedCourse === course 
-                     ? 'bg-primary text-secondary shadow-lg' 
-                     : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest'
-                   }`}
-                 >
-                    {course}
-                 </button>
-              ))}
-           </div>
         </section>
 
-        {/* Date Selection Section */}
-        <section className="p-8 space-y-6">
-           <h3 className="text-sm font-black text-on-surface italic uppercase tracking-tight">Date Played</h3>
-           <div className="grid grid-cols-2 gap-4">
-              <button 
-                onClick={() => setDateType('today')}
-                className={`flex items-center justify-center gap-3 h-16 rounded-2xl font-black text-[10px] uppercase tracking-widest italic transition-all ${
-                  dateType === 'today'
-                  ? 'bg-[#002819] text-white shadow-xl'
-                  : 'bg-white border border-outline-variant/10 text-on-surface-variant'
-                }`}
-              >
-                 <Calendar size={18} />
-                 Today
-              </button>
-              <button 
-                onClick={() => setDateType('custom')}
-                className={`flex items-center justify-center gap-3 h-16 rounded-2xl font-black text-[10px] uppercase tracking-widest italic transition-all ${
-                  dateType === 'custom'
-                  ? 'bg-[#002819] text-white shadow-xl'
-                  : 'bg-white border border-outline-variant/10 text-on-surface-variant'
-                }`}
-              >
-                 <Calendar size={18} />
-                 Select Date
-              </button>
-           </div>
-        </section>
-
-        {/* Recent Scores Rolling Section */}
+        {/* Recent Activity Mini-Feed */}
         <section className="p-8 space-y-6">
            <div className="flex justify-between items-center">
-              <h3 className="text-sm font-black text-on-surface italic uppercase tracking-tight">Recent Scores</h3>
-              <span className="text-[8px] font-black text-error uppercase tracking-[0.2em] italic">Rolling Last 5</span>
+              <h3 className="text-sm font-black text-on-surface italic uppercase tracking-tight">Last 5 Rounds</h3>
+              <span className="text-[8px] font-black text-primary uppercase tracking-[0.2em] italic">Active Pool</span>
            </div>
            
            <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
-              {recentScores.map((s, i) => (
+              {recentScores.length > 0 ? recentScores.map((s, i) => (
                  <div 
                    key={i} 
-                   className={`flex-shrink-0 w-24 p-5 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden transition-all ${
-                     s.status === 'OUT' 
-                     ? 'border-2 border-dashed border-error/30 bg-white' 
-                     : 'bg-white border border-outline-variant/10 shadow-sm'
-                   }`}
+                   className="flex-shrink-0 w-24 p-5 rounded-2xl flex flex-col items-center justify-center bg-white border border-outline-variant/10 shadow-sm"
                  >
-                    {s.status === 'OUT' && (
-                       <div className="absolute top-0 right-0 bg-error text-white text-[7px] font-black px-1.5 py-0.5 rounded-bl-lg uppercase tracking-widest italic">OUT</div>
-                    )}
-                    <span className="text-[8px] font-black text-on-surface-variant/40 uppercase italic mb-3 text-center leading-tight">{s.date}</span>
-                    <span className={`text-2xl font-black italic tracking-tighter ${s.status === 'OUT' ? 'text-error/40' : 'text-on-surface'}`}>{s.pts}</span>
-                    
-                    {s.current && (
-                       <div className="absolute bottom-0 left-0 w-full h-1 bg-primary"></div>
-                    )}
+                    <span className="text-[8px] font-black text-on-surface-variant/40 uppercase italic mb-3 text-center leading-tight">Verified</span>
+                    <span className="text-2xl font-black italic tracking-tighter text-on-surface">{s.value}</span>
                  </div>
-              ))}
+              )) : (
+                <div className="text-center w-full py-4 opacity-40 text-[10px] font-black uppercase italic">No history yet</div>
+              )}
            </div>
-           
-           <p className="text-[9px] font-bold text-on-surface-variant text-center italic opacity-40">
-              New score will replace your 26pt round from Sept 24th
-           </p>
         </section>
       </div>
 
@@ -176,10 +162,17 @@ const LogScore = () => {
          <motion.button 
            whileHover={{ scale: 1.02 }}
            whileTap={{ scale: 0.98 }}
-           className="w-full bg-[#002819] text-white h-20 rounded-[1.5rem] font-black text-sm uppercase tracking-[0.2em] italic flex items-center justify-center gap-4 shadow-[0_20px_40px_rgba(0,40,25,0.2)]"
+           onClick={handleSubmit}
+           disabled={submitting}
+           id="submit-score-btn"
+           className="w-full bg-[#002819] text-white h-20 rounded-[1.5rem] font-black text-sm uppercase tracking-[0.2em] italic flex items-center justify-center gap-4 shadow-[0_20px_40px_rgba(0,40,25,0.2)] disabled:opacity-50"
          >
-            <span>Submit Round</span>
-            <Send size={18} className="translate-x-1 -translate-y-1" />
+            {submitting ? <Loader2 className="animate-spin" size={24} /> : (
+              <>
+                <span>Submit & Verify</span>
+                <Send size={18} className="translate-x-1 -translate-y-1" />
+              </>
+            )}
          </motion.button>
       </div>
     </div>

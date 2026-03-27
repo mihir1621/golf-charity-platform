@@ -8,23 +8,37 @@ export const runDraw = async (req: AuthRequest, res: Response): Promise<void> =>
     
     // 1. Admin Authorization check
     const uid = req.user?.uid;
-    const userDoc = await db.collection('users').doc(uid!).get();
+    const userDocRef = db.collection('users').doc(uid!);
+    const userDoc = await userDocRef.get();
     if (userDoc.data()?.role !== 'admin') {
       res.status(403).json({ error: 'Access Denied: Admin privileges required.' });
       return;
     }
 
-    // 2. Generate Winning Numbers (e.g., 5 numbers between 1-45)
-    // Using a simple algorithm: Random 5 unique scores
+    // 2. Fetch current global Prize Pool & Rollover from last draw
+    const statsRef = db.collection('stats').doc('global');
+    const statsDoc = await statsRef.get();
+    const currentRollover = statsDoc.data()?.rolloverAmount || 0;
+    
+    // Logic: Calculate prize pool based on total active subscribers
+    const activeSubscribers = await db.collection('users').where('subscriptionStatus', '==', 'active').count().get();
+    const subscriberCount = activeSubscribers.data().count;
+    
+    // Mock formula: $5 per subscriber goes to pool
+    const newPoolContribution = subscriberCount * 5;
+    const totalPrizePool = newPoolContribution + currentRollover;
+
+    // 3. Generate Winning Numbers (e.g., 5 unique numbers between 1-45)
     const winningNumbers: number[] = [];
     while (winningNumbers.length < 5) {
       const r = Math.floor(Math.random() * 45) + 1;
       if (!winningNumbers.includes(r)) winningNumbers.push(r);
     }
 
-    // 3. Find Winners
-    // Logic: Compare user's last 5 scores against winning numbers
-    const usersSnapshot = await db.collection('users').where('subscriptionStatus', '==', 'active').get();
+    // 4. Find Winners
+    const usersSnapshot = await db.collection('users')
+      .where('subscriptionStatus', '==', 'active')
+      .get();
     
     interface WinningResult {
       userId: string;
@@ -41,8 +55,6 @@ export const runDraw = async (req: AuthRequest, res: Response): Promise<void> =>
         .get();
       
       const userScores = scoresSnapshot.docs.map(doc => doc.data().value);
-      
-      // Calculate matches
       const matchCount = userScores.filter(s => winningNumbers.includes(s)).length;
       
       if (matchCount >= 3) {
@@ -54,49 +66,62 @@ export const runDraw = async (req: AuthRequest, res: Response): Promise<void> =>
       }
     }
 
-    // 4. Calculate Prize Pool Distributions
-    // Current Prize Pool calculation normally derived from subscription revenue
-    const totalPrizePool = 10000; // Mock total pool for demonstration
-    const distributions = {
-      '5-match': 0.40 * totalPrizePool,
-      '4-match': 0.35 * totalPrizePool,
-      '3-match': 0.25 * totalPrizePool
-    };
+    // 5. PRD Tier Mapping & Prize Logic
+    const PRD_PRIZES = [
+      { matches: 5, amount: 2000, maxWinners: 1, tierName: 'match-5' },
+      { matches: 4, amount: 500, maxWinners: 2, tierName: 'match-4' },
+      { matches: 3, amount: 100, maxWinners: 5, tierName: 'match-3' },
+      { matches: 2, amount: 50, maxWinners: 10, tierName: 'match-2' },
+      { matches: 1, amount: 10, maxWinners: 20, tierName: 'match-1' }
+    ];
 
+    let nextRollover = 0;
     const drawResults: any[] = [];
     
-    // Split prize pools among winners in each tier
-    ['5-match', '4-match', '3-match'].forEach(tier => {
-      const tierWinners = winners.filter(w => w.tier === tier);
+    PRD_PRIZES.forEach(tier => {
+      // Find eligible winners for this tier
+      const eligible = winners.filter(w => w.matches === tier.matches);
+      const tierWinners = eligible.slice(0, tier.maxWinners);
+      
       if (tierWinners.length > 0) {
-        const prizePerWinner = distributions[tier as keyof typeof distributions] / tierWinners.length;
         tierWinners.forEach(winner => {
           drawResults.push({
             userId: winner.userId,
-            matchTier: tier,
-            prizeAmount: prizePerWinner,
+            matchTier: tier.tierName,
+            prizeAmount: tier.amount,
+            charityAmount: tier.amount * 0.1, // Platform adds 10% charity gift per PRD 03.1
             paymentStatus: 'pending',
+            monthYear,
             createdAt: new Date()
           });
         });
+      } else if (tier.matches === 5) {
+        // Rollover Match-5 pool if no winners
+        // The rollover amount for Match 5 is £2,000 as per PRD
+        nextRollover = tier.amount;
       }
     });
 
-    // 5. Persist Results & Draw record
+    // 6. Persist Results
     if (!isSimulation) {
       const drawRef = await db.collection('draws').add({
         monthYear,
         status: 'completed',
         totalPrizePool,
         winningNumbers,
+        executedBy: uid,
         executedAt: new Date(),
+        rolloverAdded: nextRollover,
         createdAt: new Date()
       });
 
+      // Update global stats with rollover for next time
+      await statsRef.set({ rolloverAmount: nextRollover }, { merge: true });
+
       const batch = db.batch();
-      drawResults.forEach(res => {
+      drawResults.forEach(resItem => {
         const docRef = db.collection('results').doc();
-        batch.set(docRef, { ...res, drawId: drawRef.id });
+        batch.set(docRef, { ...resItem, drawId: drawRef.id });
       });
       await batch.commit();
 
@@ -104,13 +129,15 @@ export const runDraw = async (req: AuthRequest, res: Response): Promise<void> =>
         message: 'Draw completed and results published.',
         drawId: drawRef.id,
         winnersFound: winners.length,
-        winningNumbers 
+        winningNumbers,
+        rollover: nextRollover
       });
     } else {
       res.status(200).json({ 
         message: 'Simulation successful.', 
         results: drawResults, 
-        winningNumbers 
+        winningNumbers,
+        potentialRollover: nextRollover 
       });
     }
 
@@ -131,6 +158,19 @@ export const getResults = async (req: AuthRequest, res: Response): Promise<void>
       
     const results = resultsSnapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
     res.status(200).json(results);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getDrawHistory = async (_req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const drawsSnapshot = await db.collection('draws')
+      .orderBy('executedAt', 'desc')
+      .get();
+      
+    const draws = drawsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    res.status(200).json(draws);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { runDraw, getResults } from '../controllers/drawController.js';
+import { runDraw, getResults, getDrawHistory } from '../controllers/drawController.js';
 import { requireAuth } from '../middleware/authMiddleware.js';
 
 const router = Router();
@@ -9,5 +9,8 @@ router.post('/run', requireAuth, runDraw);
 
 // /api/draw/results
 router.get('/results', requireAuth, getResults);
+
+// /api/draw/history (global community view)
+router.get('/history', requireAuth, getDrawHistory);
 
 export default router;

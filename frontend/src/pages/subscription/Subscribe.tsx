@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import apiClient from '../../api/apiClient';
 import { motion } from 'framer-motion';
 import { 
@@ -56,7 +56,7 @@ const Subscribe: React.FC = () => {
   const handleSubscribe = async (planType: string) => {
     setLoading(planType);
     try {
-      const response = await apiClient.post('/subscribe', { planType });
+      const response = await apiClient.post('/subscribe/checkout', { planType });
       if (response.data.checkoutUrl) {
         window.location.href = response.data.checkoutUrl;
       }

@@ -5,12 +5,10 @@ import { requireAuth } from '../middleware/authMiddleware.js';
 const router = Router();
 
 // /api/subscribe
-router.post('/', requireAuth, createSubscription);
+router.post('/checkout', requireAuth, createSubscription);
 
-// /api/webhook/stripe - Note: this route is mounted earlier in app.ts 
-// so it doesn't get the JSON parser middleware (Stripe validation requires raw body)
-// However, the router is shared. We handle it in app.ts specifically like:
-// app.use('/api/webhook/stripe', express.raw({ type: 'application/json' }), subscriptionRoutes);
-router.post('/', handleStripeWebhook);
+// Webhook listener - this will be /api/webhook/stripe/callback
+// ensure app.ts mounts it to /api/webhook/stripe
+router.post('/callback', handleStripeWebhook);
 
 export default router;

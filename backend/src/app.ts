@@ -9,13 +9,12 @@ import drawRoutes from './routes/drawRoutes.js';
 import charityRoutes from './routes/charityRoutes.js';
 import subscriptionRoutes from './routes/subscriptionRoutes.js';
 import winnerRoutes from './routes/winnerRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 dotenv.config();
 
 const app = express();
 
-// Stripe webhook requires raw body, so we will handle it in the specific route
-// For all other routes, we use express.json()
 app.use(cors());
 
 // Webhook route - must be before express.json() to get raw body
@@ -27,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/scores', scoreRoutes);
 app.use('/api/draw', drawRoutes);
