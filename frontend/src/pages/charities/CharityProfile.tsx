@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Globe, 
   ShieldCheck, 
@@ -8,11 +8,15 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
+  ArrowRight,
+  MapPin,
+  ExternalLink
 } from 'lucide-react';
 import PageTransition from '../../components/animations/PageTransition';
 
 const CharityProfile: React.FC = () => {
   const { id: _id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   // Mock data for "The Canopy Collective"
   const charity = {
@@ -34,96 +38,116 @@ const CharityProfile: React.FC = () => {
   };
 
   return (
-    <PageTransition className="space-y-0 pb-0">
-      {/* Hero Section */}
-      <div className="relative h-[80vh] w-full overflow-hidden flex items-end">
+    <PageTransition className="space-y-0 overflow-x-hidden">
+      {/* Dynamic Hero Section - Responsive Height */}
+      <div className="relative min-h-[70vh] md:h-[85vh] w-full overflow-hidden flex items-end">
         <img 
           src={charity.heroImage} 
-          className="absolute inset-0 w-full h-full object-cover" 
-          alt="Forest backdrop" 
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-[3000ms] hover:scale-105" 
+          alt={charity.name} 
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#002819] via-[#002819]/40 to-transparent"></div>
         
-        <div className="relative max-w-7xl mx-auto px-8 w-full pb-20 space-y-8">
-           <div className="px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full w-max flex items-center gap-3">
-              <span className="text-[10px] font-black text-white uppercase tracking-[0.2em] italic">Verified Partner</span>
-              <ShieldCheck size={14} className="text-[#fed65b]" />
-           </div>
+        <div className="relative max-w-7xl mx-auto px-6 md:px-12 w-full pb-16 md:pb-24 space-y-8 md:space-y-12">
+           <button 
+             onClick={() => navigate(-1)}
+             className="px-6 py-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full w-max flex items-center gap-4 group hover:bg-white/20 transition-all shadow-2xl scale-90 md:scale-100 origin-left"
+           >
+              <ChevronLeft size={18} className="text-white group-hover:-translate-x-1 transition-transform" />
+              <span className="text-[10px] font-black text-white uppercase tracking-[0.3em] italic">Back to Partners</span>
+           </button>
            
-           <div className="space-y-4">
-              <h1 className="text-7xl md:text-9xl font-black text-white italic tracking-tighter uppercase leading-none">
+           <div className="space-y-6 md:space-y-8">
+              <div className="flex items-center gap-4 text-[#fed65b]">
+                 <ShieldCheck size={24} className="opacity-80" />
+                 <span className="text-xs md:text-sm font-black uppercase tracking-[0.4em] italic shadow-sm">Verified Strategic Partner</span>
+              </div>
+              <h1 className="text-5xl sm:text-7xl md:text-9xl font-black text-white italic tracking-tighter uppercase leading-[0.85] max-w-5xl">
                  {charity.name}
               </h1>
-              <p className="text-xl md:text-2xl text-white/80 font-medium italic max-w-3xl leading-relaxed tracking-tight">
+              <p className="text-lg md:text-3xl text-white/70 font-medium italic max-w-3xl leading-relaxed tracking-tight">
                  {charity.tagline}
               </p>
            </div>
         </div>
       </div>
 
-      {/* Content Section */}
+      {/* Narrative Section - Responsive Grid */}
       <div className="bg-white">
-        <div className="max-w-7xl mx-auto px-8 py-24 lg:py-32 grid grid-cols-1 lg:grid-cols-12 gap-20">
-           {/* Left: The Mission */}
-           <div className="lg:col-span-7 space-y-16">
-              <div className="space-y-10">
-                 <h2 className="text-4xl font-black italic uppercase tracking-tighter text-on-surface">The Mission</h2>
-                 <div className="space-y-8 text-lg font-medium text-on-surface-variant leading-relaxed opacity-85 italic">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-32 grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24 items-start">
+           
+           {/* Primary Content Column */}
+           <div className="lg:col-span-7 space-y-16 md:space-y-24">
+              <div className="space-y-10 md:space-y-14">
+                 <div className="space-y-4">
+                    <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em] block italic opacity-40">Core Objectives</span>
+                    <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-[#002819] leading-tight">The Mission Protocol.</h2>
+                 </div>
+                 <div className="space-y-8 text-base md:text-xl font-medium text-on-surface-variant/80 leading-relaxed italic border-l-4 border-primary/20 pl-8 md:pl-12 py-4">
                     <p>{charity.mission}</p>
                     <p>{charity.missionDetail}</p>
                  </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-8">
-                 <img 
-                   src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2613&auto=format&fit=crop" 
-                   className="w-full h-[400px] object-cover rounded-[3rem] shadow-xl hover:scale-[1.02] transition-all" 
-                   alt="Mission support" 
-                 />
-                 <img 
-                   src="https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=2541&auto=format&fit=crop" 
-                   className="w-full h-[400px] object-cover rounded-[3rem] shadow-xl hover:scale-[1.02] transition-all" 
-                   alt="Mission result" 
-                 />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10">
+                 <div className="relative h-[350px] md:h-[500px] overflow-hidden rounded-[2.5rem] md:rounded-[4rem] group shadow-2xl">
+                    <img 
+                      src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2613&auto=format&fit=crop" 
+                      className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" 
+                      alt="Operations" 
+                    />
+                    <div className="absolute inset-0 bg-[#002819]/20 group-hover:bg-transparent transition-colors"></div>
+                 </div>
+                 <div className="relative h-[350px] md:h-[500px] overflow-hidden rounded-[2.5rem] md:rounded-[4rem] group shadow-2xl sm:mt-12">
+                    <img 
+                      src="https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=2541&auto=format&fit=crop" 
+                      className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" 
+                      alt="Biodiversity" 
+                    />
+                    <div className="absolute inset-0 bg-[#002819]/20 group-hover:bg-transparent transition-colors"></div>
+                 </div>
               </div>
            </div>
 
-           {/* Right: Impact Card */}
-           <div className="lg:col-span-5 relative">
-              <div className="sticky top-32 bg-white p-12 rounded-[4rem] border border-outline-variant/10 shadow-[0_40px_80px_rgba(0,0,0,0.06)] space-y-12">
-                 <h3 className="text-2xl font-black italic uppercase tracking-tighter text-on-surface">Our Collective Impact</h3>
+           {/* Sticky Analytics Sidebar - Fully Responsive */}
+           <div className="lg:col-span-5 w-full">
+              <div className="lg:sticky lg:top-32 bg-[#fafafa] p-10 md:p-14 rounded-[3rem] md:rounded-[4rem] border border-black/[0.03] shadow-[0_40px_80px_rgba(0,0,0,0.04)] space-y-12">
+                 <div className="space-y-4">
+                    <h3 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter text-[#002819]">Member Impact Registry</h3>
+                    <p className="text-xs md:text-sm font-medium text-on-surface-variant/40 italic">Aggregated data from your 'Clubhouse' contributions.</p>
+                 </div>
                  
-                 <div className="space-y-8">
+                 <div className="space-y-10">
                     {charity.stats.map((stat, i) => (
-                      <div key={i} className="flex items-center gap-8 group">
-                         <div className={`p-5 rounded-[2rem] ${stat.color} transition-transform group-hover:scale-110`}>
+                      <div key={i} className="flex items-center gap-6 md:gap-8 group">
+                         <div className={`p-6 rounded-[1.8rem] md:rounded-[2.2rem] ${stat.color} transition-all duration-500 group-hover:rotate-6 group-hover:scale-110 shadow-sm`}>
                             {stat.icon}
                          </div>
-                         <div>
-                            <p className="text-3xl font-black italic text-on-surface tracking-tighter">{stat.value}</p>
-                            <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest italic opacity-60">{stat.label}</p>
+                         <div className="space-y-1">
+                            <p className="text-3xl md:text-4xl font-black italic text-[#002819] tracking-tighter leading-none">{stat.value}</p>
+                            <p className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] italic">{stat.label}</p>
                          </div>
                       </div>
                     ))}
                  </div>
 
-                 <div className="space-y-4 pt-4 border-t border-surface-container">
-                    <div className="flex justify-between text-[10px] font-black uppercase italic tracking-widest">
-                       <span className="opacity-40 text-on-surface-variant">Project Goal: Phase 4</span>
-                       <span className="text-primary">82%</span>
+                 <div className="space-y-4 pt-4 border-t border-black/[0.03]">
+                    <div className="flex justify-between items-center text-[10px] font-black uppercase italic tracking-[0.2em]">
+                       <span className="opacity-40 text-on-surface-variant">Regional Goal Authorization</span>
+                       <span className="text-primary bg-primary/5 px-2 py-0.5 rounded-full border border-primary/10">82% Verified</span>
                     </div>
-                    <div className="h-2 w-full bg-surface-container rounded-full overflow-hidden">
-                       <div className="h-full bg-primary rounded-full shadow-sm" style={{ width: '82%' }}></div>
+                    <div className="h-2.5 w-full bg-black/[0.03] rounded-full overflow-hidden p-0.5">
+                       <div className="h-full bg-primary rounded-full shadow-lg" style={{ width: '82%' }}></div>
                     </div>
                  </div>
 
-                 <button className="w-full py-6 bg-[#002819] text-white rounded-[2rem] font-black uppercase tracking-widest italic flex items-center justify-center gap-4 hover:bg-primary shadow-2xl transition-all active:scale-95">
-                    Increase My Contribution
-                    <Sparkles size={18} />
+                 <button className="w-full py-6 md:py-8 bg-[#002819] text-[#fed65b] rounded-[1.5rem] md:rounded-[2.5rem] font-black uppercase tracking-[0.3em] italic flex items-center justify-center gap-6 hover:scale-[1.03] shadow-2xl transition-all active:scale-95 border-b-4 border-black/20">
+                    Amplify My Impact
+                    <Sparkles size={20} className="animate-pulse" />
                  </button>
 
-                 <div className="flex items-center justify-center gap-3 text-[10px] font-black text-on-surface-variant uppercase tracking-widest italic opacity-40">
-                    <ShieldCheck size={14} />
+                 <div className="flex items-center justify-center gap-4 text-[10px] font-black text-on-surface-variant/30 uppercase tracking-[0.4em] italic pt-4">
+                    <ShieldCheck size={18} />
                     Certified Fairway Partner
                  </div>
               </div>
@@ -131,77 +155,70 @@ const CharityProfile: React.FC = () => {
         </div>
       </div>
 
-      {/* Where Your Fund Goes Section */}
-      <div className="bg-surface-container-low/30 py-32">
-         <div className="max-w-7xl mx-auto px-8 space-y-16">
-            <div className="flex justify-between items-end">
-               <div className="space-y-4">
-                  <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-on-surface">Where Your Fund Goes</h2>
-                  <p className="text-on-surface-variant font-medium italic opacity-70">We operate in 12 distinct wildlife corridors. Every donation is pooled to maximize purchasing power for endemic saplings.</p>
+      {/* Global Deployment Map Section - Responsive Feed */}
+      <div className="bg-[#002819] py-24 md:py-40 overflow-hidden relative">
+         <div className="max-w-7xl mx-auto px-6 md:px-12 space-y-16 md:space-y-24 relative z-10">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+               <div className="max-w-3xl space-y-6">
+                  <span className="text-[10px] font-black text-[#fed65b] uppercase tracking-[0.5em] block italic opacity-60">Global Reach Network</span>
+                  <h2 className="text-4xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-[0.9]">Distributed <br/> Resources.</h2>
+                  <p className="text-white/40 text-base md:text-xl font-medium italic leading-relaxed max-w-2xl">
+                     We operate in 12 distinct wildlife corridors. Every donation is pooled within the Clubhouse ecosystem to maximize purchasing power for endemic saplings across diverse biomes.
+                  </p>
                </div>
                <div className="flex gap-4">
-                  <button className="p-4 bg-white rounded-full border border-outline-variant/10 text-on-surface-variant hover:bg-primary hover:text-white transition-all shadow-sm">
-                     <ChevronLeft size={24} />
+                  <button className="w-16 h-16 md:w-20 md:h-20 bg-white/5 rounded-full border border-white/10 text-white flex items-center justify-center transition-all hover:bg-[#fed65b] hover:text-[#002819] shadow-2xl">
+                     <ChevronLeft size={28} />
                   </button>
-                  <button className="p-4 bg-white rounded-full border border-outline-variant/10 text-on-surface-variant hover:bg-primary hover:text-white transition-all shadow-sm">
-                     <ChevronRight size={24} />
+                  <button className="w-16 h-16 md:w-20 md:h-20 bg-white/5 rounded-full border border-white/10 text-white flex items-center justify-center transition-all hover:bg-[#fed65b] hover:text-[#002819] shadow-2xl">
+                     <ChevronRight size={28} />
                   </button>
                </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-14">
                {charity.projects.map((project, i) => (
-                  <div key={i} className="group relative h-[500px] rounded-[3.5rem] overflow-hidden shadow-2xl">
+                  <div key={i} className="group relative h-[500px] md:h-[650px] rounded-[3rem] md:rounded-[4.5rem] overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.3)]">
                      <img 
                        src={project.image} 
-                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" 
                        alt={project.name} 
                      />
-                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                     <div className="absolute bottom-12 left-10 space-y-2">
-                        <span className="text-[10px] font-black text-white/60 uppercase tracking-widest italic">{project.country}</span>
-                        <h4 className="text-2xl font-black text-white italic uppercase tracking-tight leading-none">{project.name}</h4>
+                     <div className="absolute inset-0 bg-gradient-to-t from-[#002819] via-transparent to-transparent opacity-90 group-hover:opacity-60 transition-opacity"></div>
+                     
+                     <div className="absolute top-10 right-10 flex">
+                        <div className="p-4 bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 text-[#fed65b] shadow-xl">
+                           <MapPin size={24} />
+                        </div>
+                     </div>
+
+                     <div className="absolute bottom-16 left-12 space-y-6">
+                        <div className="space-y-2">
+                           <span className="text-[10px] font-black text-[#fed65b] uppercase tracking-[0.4em] italic drop-shadow-lg">{project.country}</span>
+                           <h4 className="text-3xl md:text-4xl font-black text-white italic uppercase tracking-tighter leading-none">{project.name}</h4>
+                        </div>
+                        <button className="flex items-center gap-4 text-[10px] font-black text-white uppercase tracking-[0.3em] italic opacity-0 group-hover:opacity-100 transition-all -translate-y-4 group-hover:translate-y-0">
+                           View Coordinates
+                           <ArrowRight size={16} />
+                        </button>
                      </div>
                   </div>
                ))}
             </div>
-         </div>
-      </div>
-
-      {/* Premium Profile Footer (matching app design) */}
-      <div className="bg-[#002819] py-32 text-white/50 px-8">
-         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-20">
-            <div className="md:col-span-2 space-y-10">
-               <h3 className="text-4xl font-black text-white italic tracking-tighter uppercase">FairwayFund</h3>
-               <p className="max-w-md text-lg font-medium italic leading-relaxed">The world's most transparent platform for high-impact philanthropy. Join the clubhouse of global change-makers.</p>
-            </div>
             
-            <div className="space-y-8">
-               <p className="text-[11px] font-black text-white uppercase tracking-[0.3em] italic">Explore</p>
-               <ul className="space-y-4 text-sm font-bold uppercase tracking-widest italic pt-2">
-                  <li className="hover:text-primary transition-colors cursor-pointer">Find Charities</li>
-                  <li className="hover:text-primary transition-colors cursor-pointer">Impact Reports</li>
-                  <li className="hover:text-primary transition-colors cursor-pointer">Partner with Us</li>
-               </ul>
-            </div>
-
-            <div className="space-y-8">
-               <p className="text-[11px] font-black text-white uppercase tracking-[0.3em] italic">Membership</p>
-               <ul className="space-y-4 text-sm font-bold uppercase tracking-widest italic pt-2">
-                  <li className="hover:text-primary transition-colors cursor-pointer">The Green Tier</li>
-                  <li className="hover:text-primary transition-colors cursor-pointer">The Masters Tier</li>
-                  <li className="hover:text-primary transition-colors cursor-pointer">Corporate Gifting</li>
-               </ul>
+            <div className="pt-12 md:pt-20 flex flex-col items-center gap-6">
+               <button className="px-12 py-6 bg-white/5 border border-white/10 rounded-2xl text-white font-black text-xs md:text-sm uppercase tracking-[0.4em] italic hover:bg-white hover:text-[#002819] transition-all shadow-2xl flex items-center gap-6 group">
+                  Global Impact Map
+                  <ExternalLink size={18} className="opacity-40 group-hover:opacity-100 transition-opacity" />
+               </button>
+               <p className="text-[10px] md:text-[11px] font-black text-white/20 uppercase tracking-[0.6em] italic text-center">
+                  Live Telemetry Active // Tracking Cycle 4022-X
+               </p>
             </div>
          </div>
          
-         <div className="max-w-7xl mx-auto pt-32 mt-32 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-10">
-            <p className="text-[10px] font-black uppercase tracking-widest">© 2026 FairwayFund International. All Rights Reserved.</p>
-            <div className="flex gap-10 text-[10px] font-black uppercase tracking-widest">
-               <span className="hover:text-white transition-colors cursor-pointer">Privacy Policy</span>
-               <span className="hover:text-white transition-colors cursor-pointer">Terms of Play</span>
-            </div>
-         </div>
+         {/* Background Visual Enhancer */}
+         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none"></div>
       </div>
     </PageTransition>
   );

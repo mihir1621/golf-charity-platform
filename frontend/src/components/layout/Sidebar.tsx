@@ -54,7 +54,7 @@ const Sidebar: React.FC = () => {
     { name: 'Verification', icon: <ShieldAlert size={20} />, path: '/admin/verification', active: location.pathname === '/admin/verification' },
     { name: 'Charity Partners', icon: <Heart size={20} />, path: '/admin/charity-partners', active: location.pathname === '/admin/charity-partners' },
     { name: 'Settings', icon: <Settings size={20} />, path: '/admin/settings', active: location.pathname === '/admin/settings' },
-  ] : [
+  ] : (user ? [
     { name: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/dashboard', active: location.pathname === '/dashboard' },
     { name: 'Draw Simulator', icon: <Dice5 size={20} />, path: '/draw-simulator', active: location.pathname === '/draw-simulator' },
     { name: 'Verification', icon: <ShieldAlert size={20} />, path: '/verification', active: location.pathname === '/verification' || location.pathname === '/winner-proof' },
@@ -68,9 +68,13 @@ const Sidebar: React.FC = () => {
     { name: 'Perks', icon: <Gift size={20} />, path: '/perks', active: location.pathname === '/perks' },
     { name: 'Notifications', icon: <Bell size={20} />, path: '/notifications', active: location.pathname === '/notifications' },
     { name: 'Profile', icon: <UserIcon size={20} />, path: '/profile', active: location.pathname === '/profile' },
-  ];
-
-  if (!user) return null;
+  ] : [
+    { name: 'Home', icon: <LayoutDashboard size={20} />, path: '/', active: location.pathname === '/' },
+    { name: 'Impact', icon: <Leaf size={20} />, path: '/impact', active: location.pathname === '/impact' },
+    { name: 'Leaderboard', icon: <Medal size={20} />, path: '/leaderboard', active: location.pathname === '/leaderboard' },
+    { name: 'Perks', icon: <Gift size={20} />, path: '/perks', active: location.pathname === '/perks' },
+    { name: 'Charities', icon: <Heart size={20} />, path: '/charities', active: location.pathname === '/charities' },
+  ]);
 
   return (
     <>
@@ -125,18 +129,38 @@ const Sidebar: React.FC = () => {
         <div className="mt-auto space-y-4 pt-8 border-t border-outline-variant/10">
           <Link
             to="/support"
+            onClick={closeSidebar}
             className="flex items-center gap-4 px-6 py-4 rounded-2xl text-on-surface-variant hover:bg-surface-container-high font-medium transition-all"
           >
             <HelpCircle size={20} />
             <span className="text-sm">Support</span>
           </Link>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-error hover:bg-error/5 font-medium transition-all"
-          >
-            <LogOut size={20} />
-            <span className="text-sm">Logout</span>
-          </button>
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-error hover:bg-error/5 font-medium transition-all"
+            >
+              <LogOut size={20} />
+              <span className="text-sm">Logout</span>
+            </button>
+          ) : (
+            <div className="space-y-3 pt-2">
+              <Link
+                to="/login"
+                onClick={closeSidebar}
+                className="w-full flex items-center justify-center py-4 text-primary font-black uppercase tracking-widest text-xs border-2 border-primary/20 rounded-2xl hover:bg-primary/5 transition-all"
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                onClick={closeSidebar}
+                className="w-full flex items-center justify-center py-4 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all"
+              >
+                Join Now
+              </Link>
+            </div>
+          )}
           {isAdminPath && (
             <button 
               onClick={() => navigate('/admin/draw-simulator')}

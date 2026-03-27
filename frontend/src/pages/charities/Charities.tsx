@@ -12,18 +12,19 @@ import {
   Loader2,
   Trophy,
   ArrowRight,
-  Backpack
+  Backpack,
+  ChevronRight
 } from 'lucide-react';
 import apiClient from '../../api/apiClient';
 import PageTransition from '../../components/animations/PageTransition';
 
 const ICON_MAP: Record<string, any> = {
-  'education': <Backpack size={18} />,
-  'environment': <Sprout size={18} />,
-  'veterans': <ShieldCheck size={18} />,
-  'water': <Droplets size={18} />,
-  'health': <Stethoscope size={18} />,
-  'default': <Heart size={18} />
+  'education': <Backpack size={20} />,
+  'environment': <Sprout size={20} />,
+  'veterans': <ShieldCheck size={20} />,
+  'water': <Droplets size={20} />,
+  'health': <Stethoscope size={20} />,
+  'default': <Heart size={20} />
 };
 
 const Charities: React.FC = () => {
@@ -57,27 +58,37 @@ const Charities: React.FC = () => {
     try {
       await apiClient.post('/user/update-charity', { charityId: id });
        setSelectedCharity(id);
-       alert('Contribution target updated successfully!');
     } catch (err: any) {
-      alert(`Error updating charity: ${err.response?.data?.error || err.message}`);
+      console.error(`Error updating charity: ${err.message}`);
     }
   };
 
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(amount);
+  };
+
   if (loading) return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-[60vh]">
       <Loader2 className="animate-spin text-primary" size={48} />
     </div>
   );
 
   return (
-    <PageTransition className="max-w-7xl mx-auto px-6 py-12 space-y-16">
-      {/* Header & Feature Spotlight */}
-      <div className="flex flex-col lg:flex-row justify-between items-stretch gap-12">
-        <div className="max-w-2xl flex flex-col justify-center">
-          <span className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-4 block italic">Our Ecosystem</span>
-          <h1 className="text-5xl md:text-6xl font-black text-on-surface tracking-tighter mb-6 leading-none italic uppercase">Impact <span className="text-secondary underline underline-offset-8 decoration-primary/20">Partners</span></h1>
-          <p className="text-on-surface-variant text-lg font-medium leading-relaxed opacity-70 italic">
-            At Clubhouse, every subscription fuels high-impact giving. From youth development to environmental restoration, your membership drives positive change across the globe.
+    <PageTransition className="px-6 sm:px-8 py-8 md:py-16 max-w-7xl mx-auto space-y-12 md:space-y-24 overflow-x-hidden">
+      {/* Header & Feature Spotlight - Fully Responsive */}
+      <div className="flex flex-col lg:flex-row justify-between items-stretch gap-10 md:gap-16 px-2 lg:px-0">
+        <div className="flex-1 flex flex-col justify-center space-y-6 md:space-y-10">
+          <div>
+            <span className="text-[10px] font-black text-primary uppercase tracking-[0.4em] mb-4 block italic shadow-sm w-max px-3 py-1 bg-primary/5 rounded-full border border-primary/10">
+              Global Ecosystem
+            </span>
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-[#002819] tracking-tighter mb-6 leading-none italic uppercase">
+              Impact <br className="hidden md:block" />
+              <span className="text-primary underline decoration-secondary/20 underline-offset-[12px]">Partners.</span>
+            </h1>
+          </div>
+          <p className="text-on-surface-variant text-base md:text-xl font-medium leading-relaxed opacity-70 italic max-w-2xl">
+            At Clubhouse, every subscription fuels high-impact giving. From restoring habitats to empowering youth development, your membership drives verified positive change across the globe.
           </p>
         </div>
 
@@ -85,115 +96,121 @@ const Charities: React.FC = () => {
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex-1 bg-primary text-secondary p-10 rounded-[3rem] relative overflow-hidden shadow-2xl group"
+            className="flex-1 bg-[#002819] text-white p-8 md:p-14 rounded-[2.5rem] md:rounded-[4rem] relative overflow-hidden shadow-[0_40px_80px_rgba(0,40,25,0.2)] group"
           >
-            <div className="relative z-10">
-               <div className="flex items-center gap-3 mb-8">
-                  <Trophy size={20} className="text-[#fed65b]" />
-                  <span className="text-[10px] font-black uppercase tracking-widest italic opacity-60">Featured Partner of the Month</span>
+            <div className="relative z-10 space-y-8 md:space-y-12">
+               <div className="flex justify-between items-start">
+                  <div className="flex items-center gap-3">
+                    <Trophy size={20} className="text-[#fed65b] animate-pulse" />
+                    <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] italic text-[#fed65b]">Featured Partner Cycle</span>
+                  </div>
+                  <Sparkles size={24} className="text-[#fed65b]/30" />
                </div>
-               <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-4">{featured.name}</h2>
-               <p className="text-sm font-medium italic opacity-80 leading-relaxed mb-10 max-w-md">{featured.description}</p>
-                <div className="flex flex-wrap gap-4">
-                  <Link 
-                    to={`/charity/${featured.id}`}
-                    className="flex items-center gap-4 py-4 px-8 bg-white/10 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white/20 transition-all italic border border-white/20"
-                  >
-                     View Narrative
-                     <ArrowRight size={14} />
-                  </Link>
+               
+               <div className="space-y-4">
+                  <h2 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter leading-none">{featured.name}</h2>
+                  <p className="text-sm md:text-lg font-medium italic opacity-50 leading-relaxed max-w-md">{featured.description}</p>
+               </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <button 
                     onClick={() => handleSelect(featured.id)}
-                    className="flex items-center gap-4 py-4 px-8 bg-[#fed65b] text-[#002819] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg hover:scale-105 transition-all italic"
+                    className="flex items-center justify-center gap-4 py-5 px-8 bg-[#fed65b] text-[#002819] rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl hover:scale-[1.03] active:scale-95 transition-all italic"
                   >
-                     {selectedCharity === featured.id ? 'Currently Supporting' : 'Set as Impact Target'}
+                     {selectedCharity === featured.id ? 'Active Selection' : 'Set as Impact Target'}
+                     {selectedCharity === featured.id ? <CheckCircle2 size={16} /> : <ChevronRight size={16} />}
                   </button>
+                  <Link 
+                    to={`/charity/${featured.id}`}
+                    className="flex items-center justify-center gap-4 py-5 px-8 bg-white/5 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all italic border border-white/10"
+                  >
+                     Explore Impact
+                  </Link>
                 </div>
              </div>
-            <Sparkles size={160} className="absolute -bottom-20 -right-20 text-white/5 rotate-12 group-hover:rotate-45 transition-transform duration-1000" />
+            <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-[#fed65b]/5 rounded-full blur-[100px] group-hover:bg-[#fed65b]/10 transition-colors duration-1000"></div>
           </motion.div>
         )}
       </div>
 
-      {/* Grid of Partners */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {/* Grid of Partners - Fully Responsive */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-14 px-2 lg:px-0">
         {charities.map((charity) => (
           <motion.div
             key={charity.id}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            whileHover={{ y: -5 }}
-            className={`flex flex-col bg-white rounded-[2.5rem] overflow-hidden border transition-all duration-300 group ${
+            viewport={{ once: true }}
+            className={`flex flex-col bg-white rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden border transition-all duration-500 group ${
               selectedCharity === charity.id 
-              ? 'border-primary ring-1 ring-primary shadow-2xl' 
-              : 'border-outline-variant/10 shadow-[0_10px_30px_rgba(0,0,0,0.02)]'
+              ? 'border-primary ring-2 ring-primary/10 shadow-[0_30px_60px_rgba(0,40,25,0.08)]' 
+              : 'border-black/[0.03] shadow-[0_20px_40px_rgba(0,0,0,0.02)] hover:shadow-[0_40px_80px_rgba(0,0,0,0.05)] hover:-translate-y-2'
             }`}
           >
-            {/* Image Section */}
-            <div className="h-56 relative overflow-hidden">
+            {/* High Fidelity Image Section */}
+            <div className="h-64 md:h-80 relative overflow-hidden">
                <img 
-                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                 className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" 
                  src={charity.image || 'https://images.unsplash.com/photo-1541271696563-3be2f99a3e13?q=80&w=2574&auto=format&fit=crop'} 
                  alt={charity.name} 
                  id={`charity-img-${charity.id}`}
                />
-               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+               <div className="absolute inset-0 bg-gradient-to-t from-[#002819]/60 via-transparent to-transparent opacity-60"></div>
                
                {selectedCharity === charity.id && (
-                 <div className="absolute top-4 right-4 bg-[#fed65b] text-[#002819] px-3 py-1.5 rounded-full text-[8px] font-black uppercase tracking-widest flex items-center shadow-xl border border-primary/10">
-                    <CheckCircle2 size={10} className="mr-2" />
-                    My Priority
+                 <div className="absolute top-6 right-6 bg-[#fed65b] text-[#002819] px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.2em] flex items-center shadow-2xl border border-primary/10 italic">
+                    <CheckCircle2 size={12} className="mr-2" />
+                    My Impact Target
                  </div>
                )}
                
-               <div className="absolute bottom-4 right-6 flex items-center gap-2">
-                  <Link
-                     to={`/charity/${charity.id}`}
-                     className="p-3 bg-white/20 hover:bg-primary/80 backdrop-blur-md rounded-xl border border-white/20 text-white transition-all group/info flex items-center gap-2"
-                     title="View Profile"
-                  >
-                     <span className="text-[9px] font-black uppercase tracking-widest hidden group-hover/info:block">Explore</span>
-                     <ArrowRight size={16} className="group-hover/info:translate-x-1 transition-transform" />
-                  </Link>
-               </div>
-               
-               <div className="absolute bottom-4 left-6 flex items-center gap-2">
-                  <div className="p-2 bg-white/20 backdrop-blur-md rounded-lg border border-white/20 text-white">
+               <div className="absolute bottom-6 left-6 flex items-center gap-4">
+                  <div className="p-4 bg-white/10 backdrop-blur-3xl rounded-2xl border border-white/20 text-white shadow-xl">
                      {ICON_MAP[charity.category] || ICON_MAP.default}
                   </div>
+                  <span className="text-[10px] font-black text-white uppercase tracking-[0.3em] italic drop-shadow-md">{charity.category || 'Global Cause'}</span>
                </div>
             </div>
 
-            {/* Content Section */}
-            <div className="p-8 flex-1 flex flex-col">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-black text-on-surface italic uppercase tracking-tight">{charity.name}</h3>
-                <span className="text-[9px] font-black bg-primary/5 text-primary px-2.5 py-1 rounded-md uppercase tracking-widest leading-none border border-primary/5 italic">5% Sub Share</span>
-              </div>
-               <p className="text-xs font-medium text-on-surface-variant leading-relaxed mb-6 opacity-80 italic h-16 overflow-hidden">
-                  {charity.description}
-               </p>
-               
-               <div className="mb-8 pt-6 border-t border-surface-container/50 flex justify-between items-end">
-                 <div>
-                    <p className="text-[8px] font-black text-on-surface-variant uppercase italic opacity-70 mb-1">Total Impact Value</p>
-                   <p className="text-lg font-black text-on-surface italic tracking-tight">${charity.totalRaised || 0}</p>
+            {/* Content Section - Refined Typography */}
+            <div className="p-10 md:p-14 flex-1 flex flex-col space-y-8 md:space-y-10">
+              <div className="flex justify-between items-start gap-4">
+                <h3 className="text-2xl md:text-3xl font-black text-[#002819] italic uppercase tracking-tighter leading-none flex-1 truncate">{charity.name}</h3>
+                <div className="flex flex-col items-end">
+                   <p className="text-[10px] font-black text-primary uppercase italic tracking-widest">{charity.matchRate || '5%'} Share</p>
+                   {charity.featured && <Sparkles size={14} className="text-[#fed65b] mt-1" />}
                 </div>
-                {charity.featured && <Sparkles size={16} className="text-[#fed65b]" />}
               </div>
+              
+              <p className="text-sm md:text-base font-medium text-on-surface-variant/70 leading-relaxed opacity-80 italic h-20 overflow-hidden line-clamp-3">
+                  {charity.description}
+              </p>
+               
+               <div className="pt-8 border-t border-surface-container/30 flex justify-between items-end">
+                  <div className="space-y-1">
+                    <p className="text-[9px] font-black text-on-surface-variant/40 uppercase italic tracking-widest">Aggregate Value Raised</p>
+                    <p className="text-2xl md:text-3xl font-black text-[#002819] italic tracking-tighter leading-none">{formatCurrency(charity.totalRaised || 0)}</p>
+                  </div>
+                  <Link
+                    to={`/charity/${charity.id}`}
+                    className="w-12 h-12 flex items-center justify-center bg-surface-container-high rounded-2xl text-[#002819] hover:bg-primary hover:text-white transition-all group/arrow shadow-sm"
+                  >
+                    <ArrowRight size={20} className="group-hover/arrow:translate-x-1 transition-transform" />
+                  </Link>
+               </div>
               
               <button 
                 onClick={() => handleSelect(charity.id)}
-                className={`w-full py-4 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 italic ${
+                className={`w-full py-5 md:py-6 rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-[0.3em] transition-all flex items-center justify-center gap-3 italic ${
                   selectedCharity === charity.id 
-                  ? 'bg-primary text-secondary shadow-xl shadow-primary/20' 
-                  : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest'
+                  ? 'bg-primary text-[#fed65b] shadow-2xl shadow-primary/20 scale-[1.02]' 
+                  : 'bg-surface-container-low text-on-surface-variant/60 hover:bg-surface-container-high border border-black/[0.03]'
                 }`}
               >
                 {selectedCharity === charity.id ? (
                   <>
-                    <CheckCircle2 size={14} />
-                    Current Selection
+                    <CheckCircle2 size={16} />
+                    Current Priority
                   </>
                 ) : (
                   'Prioritize This Cause'
@@ -204,8 +221,8 @@ const Charities: React.FC = () => {
         ))}
       </div>
 
-      <div className="text-center pb-12 opacity-60 text-[9px] font-black uppercase tracking-[0.3em] italic">
-         © 2026 Clubhouse Impact Network. All contributions are subject to external audit.
+      <div className="text-center pb-12 opacity-20 text-[10px] font-black uppercase tracking-[0.5em] italic">
+         Official Impact Registry // Clubhouse Distributed Philanthropy Network
       </div>
     </PageTransition>
   );

@@ -103,7 +103,7 @@ const Home: React.FC = () => {
         {/* --- IMPACT SECTION --- Mobile Optimized --- */}
         <section className="bg-[#eceef0] py-16 md:py-32 overflow-hidden border-y border-[#c0c9c1]/20">
           <div className="max-w-7xl mx-auto px-6 md:px-8 grid grid-cols-1 lg:grid-cols-2 items-center gap-16 md:gap-24">
-            <div className="relative group px-4 md:px-0">
+            <div className="relative group px-6 md:px-0">
                <div className="w-full aspect-[4/5] bg-[#002819] rounded-[2.5rem] md:rounded-[3.5rem] shadow-2xl overflow-hidden relative rotate-1 md:rotate-2">
                   <div className="absolute inset-4 sm:inset-8 top-12 bottom-12 border border-white/10 rounded-[2rem] flex items-center justify-center">
                       <div className="w-32 h-32 md:w-48 md:h-48 bg-white/5 rounded-full flex items-center justify-center backdrop-blur-3xl shadow-[0_0_100px_rgba(255,255,255,0.05)]">
@@ -190,7 +190,7 @@ const Home: React.FC = () => {
         </section>
 
         {/* --- CTA SECTION --- Responsive Banner --- */}
-        <section className="py-12 md:py-24 px-4 md:px-8 mb-12 md:mb-24 max-w-[85rem] mx-auto">
+        <section className="py-12 md:py-24 px-6 md:px-8 mb-12 md:mb-24 max-w-[85rem] mx-auto">
           <div className="bg-[#002819] rounded-[2rem] md:rounded-[4rem] p-10 md:p-24 text-center shadow-2xl relative overflow-hidden">
              <div className="relative z-10">
                 <h2 className="text-4xl sm:text-5xl md:text-[8rem] font-black text-white italic tracking-tighter mb-8 md:mb-10 leading-[1.1] uppercase">Ready to tee off?</h2>
@@ -208,32 +208,6 @@ const Home: React.FC = () => {
         </section>
       </main>
 
-      {/* --- FOOTER --- Mobile Stacking --- */}
-      <footer className="bg-white py-16 md:py-32 px-10 md:px-24">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-20">
-          <div className="col-span-1">
-             <span className="text-2xl md:text-3xl font-black tracking-tight text-[#002819] uppercase mb-6 md:mb-8 block italic">The Fairway</span>
-             <p className="text-[#404943] text-base md:text-lg font-medium leading-relaxed mb-8 md:mb-12">Elevating the game through impact, community, and competition.</p>
-          </div>
-          {['Platform', 'Charity', 'Company'].map((title, idx) => (
-             <div key={idx} className="space-y-6 md:space-y-10">
-               <h4 className="font-black uppercase text-[9px] md:text-[10px] tracking-[0.3em] text-[#191c1e]/75">{title}</h4>
-               <ul className="space-y-3 md:space-y-5 font-bold text-xs md:text-sm">
-                  {title === 'Platform' && ['Draws', 'Leaderboards', 'Clubhouse'].map(l => <li key={l}><Link to={l === 'Draws' ? '/draws' : l === 'Leaderboards' ? '/leaderboard' : '/dashboard'} className="hover:text-[#745c00]">{l}</Link></li>)}
-                  {title === 'Charity' && ['Partners', 'Impact', 'Apply'].map(l => <li key={l}><Link to={l === 'Partners' ? '/charities' : l === 'Impact' ? '/impact' : '/signup'} className="hover:text-[#745c00]">{l}</Link></li>)}
-                  {title === 'Company' && ['About', 'Support', 'Legal'].map(l => <li key={l}><Link to={l === 'Support' ? '/support' : l === 'Legal' ? '/terms' : '/'} className="hover:text-[#745c00]">{l}</Link></li>)}
-               </ul>
-             </div>
-          ))}
-        </div>
-        <div className="max-w-7xl mx-auto pt-10 md:pt-20 mt-12 md:mt-24 border-t border-[#eceef0] flex flex-col md:flex-row justify-between items-center gap-6 text-[8px] md:text-[10px] text-[#191c1e]/75 font-black tracking-widest uppercase">
-           <p>© 2026 Digital Clubhouse. All rights reserved.</p>
-           <div className="flex gap-6 md:gap-10">
-              <Link to="/privacy">Privacy</Link>
-              <Link to="/terms">Terms</Link>
-           </div>
-        </div>
-      </footer>
     </PageTransition>
   );
 };

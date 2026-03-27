@@ -136,18 +136,18 @@ const Notifications = () => {
                   notif.unread ? 'border-l-4 border-l-primary bg-primary/[0.01]' : ''
                 }`}
               >
-                <div className="flex gap-5">
-                  <div className={`w-11 h-11 rounded-xl ${bg} flex items-center justify-center flex-shrink-0`}>
+                <div className="flex gap-4 sm:gap-5">
+                  <div className={`w-10 h-10 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl ${bg} flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110 shadow-sm border border-black/5`}>
                     {icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start gap-4 mb-2">
-                       <h4 className={`text-sm font-bold ${notif.unread ? 'text-primary' : 'text-[#002819]'}`}>
+                    <div className="flex justify-between items-start gap-3 sm:gap-4 mb-1.5 sm:mb-2 ml-0.5">
+                       <h4 className={`text-xs sm:text-sm font-black italic uppercase tracking-tight ${notif.unread ? 'text-primary' : 'text-[#002819]'}`}>
                         {notif.title}
                        </h4>
-                       <span className="text-[11px] font-medium text-on-surface-variant/60">{getTimeAgo(notif.createdAt)}</span>
+                       <span className="text-[9px] sm:text-[11px] font-black uppercase tracking-widest text-on-surface-variant/30 shrink-0">{getTimeAgo(notif.createdAt)}</span>
                     </div>
-                    <p className="text-xs text-on-surface-variant/80 font-medium leading-relaxed">
+                    <p className="text-[11px] sm:text-xs text-on-surface-variant/70 font-medium leading-relaxed italic pr-2 sm:pr-0">
                       {notif.description}
                     </p>
                   </div>

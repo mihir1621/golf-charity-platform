@@ -20,28 +20,28 @@ const ImpactReports = () => {
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10 items-center"
       >
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
             <span className="text-[9px] font-black text-primary uppercase tracking-[0.3em]">Live Impact Dashboard</span>
           </div>
-          <h1 className="text-5xl lg:text-6xl font-black text-[#002819] tracking-tight leading-[1.05]">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#002819] tracking-tight leading-[1.05]">
             12,400+<br />Trees Planted
           </h1>
-          <p className="text-base text-on-surface-variant/80 font-medium leading-relaxed max-w-md">
+          <p className="text-sm md:text-base text-on-surface-variant/80 font-medium leading-relaxed max-w-md">
             The Clubhouse has reached a historic milestone, championing biodiversity and securing carbon offsets for future generations.
           </p>
-          <div className="flex items-end gap-6 pt-2">
+          <div className="flex items-end gap-4 sm:gap-6 pt-2">
             <div>
-              <span className="text-4xl font-black text-primary tracking-tight">90%</span>
-              <p className="text-[9px] font-black text-on-surface-variant/70 uppercase tracking-[0.2em] mt-1">Goal Reached</p>
+              <span className="text-3xl sm:text-4xl font-black text-primary tracking-tight">90%</span>
+              <p className="text-[8px] sm:text-[9px] font-black text-on-surface-variant/70 uppercase tracking-[0.2em] mt-1">Goal Reached</p>
             </div>
-            <div className="h-12 w-px bg-black/[0.06]"></div>
+            <div className="h-10 sm:h-12 w-px bg-black/[0.06]"></div>
             <div>
-              <span className="text-4xl font-black text-[#002819] tracking-tight">$2.1M</span>
-              <p className="text-[9px] font-black text-on-surface-variant/70 uppercase tracking-[0.2em] mt-1">Total Mobilized</p>
+              <span className="text-3xl sm:text-4xl font-black text-[#002819] tracking-tight">$2.1M</span>
+              <p className="text-[8px] sm:text-[9px] font-black text-on-surface-variant/70 uppercase tracking-[0.2em] mt-1">Total Mobilized</p>
             </div>
           </div>
         </div>
@@ -88,9 +88,9 @@ const ImpactReports = () => {
 
           {/* Progress Bar */}
           <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest">Fund Progress</span>
-              <span className="text-sm font-bold text-[#002819]">$45,000 / $60,000</span>
+            <div className="flex justify-between items-center gap-4">
+              <span className="text-[9px] sm:text-[10px] font-black text-on-surface-variant/40 uppercase tracking-widest whitespace-nowrap">Fund Progress</span>
+              <span className="text-xs sm:text-sm font-bold text-[#002819] whitespace-nowrap">$45k / $60k</span>
             </div>
             <div className="h-2.5 w-full bg-[#f0f0f0] rounded-full overflow-hidden">
               <motion.div
@@ -127,11 +127,11 @@ const ImpactReports = () => {
               Irrigation Project<br />Completion
             </h3>
           </div>
-          <div className="relative z-10 space-y-5 mt-6">
-            <p className="text-xs text-white/50 font-medium leading-relaxed">
+          <div className="relative z-10 space-y-4 md:space-y-6 mt-6">
+            <p className="text-[11px] sm:text-xs text-white/50 font-medium leading-relaxed">
               450 hectares of farmland now utilize 100% recycled water systems.
             </p>
-            <button className="px-5 py-3 bg-[#fed65b] text-[#002819] rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all">
+            <button className="px-5 py-3 bg-[#fed65b] text-[#002819] rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all w-full sm:w-auto">
               Read Impact
             </button>
           </div>

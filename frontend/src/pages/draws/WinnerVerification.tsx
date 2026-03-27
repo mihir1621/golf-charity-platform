@@ -33,7 +33,7 @@ const WinnerVerification: React.FC = () => {
   };
 
   return (
-    <PageTransition className="max-w-7xl mx-auto p-4 md:p-8 lg:p-12 space-y-12 pb-24">
+    <PageTransition className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 lg:p-12 space-y-8 md:space-y-12 pb-24">
       {/* Header Info */}
       <div className="flex flex-col md:flex-row justify-between items-start gap-8">
         <div className="space-y-4">
@@ -41,10 +41,10 @@ const WinnerVerification: React.FC = () => {
              <span className="px-3 py-1 bg-secondary text-primary text-[9px] font-black rounded-full uppercase tracking-widest italic shadow-sm">Action Required</span>
              <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[.2em] italic opacity-75">August Tournament Draw</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black text-on-surface tracking-tighter italic uppercase leading-none">
-            Claim Your <br/> Victory Proof.
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-on-surface tracking-tighter italic uppercase leading-none">
+            Claim Your <br className="hidden sm:block"/> Victory Proof.
           </h1>
-          <p className="text-on-surface-variant text-lg font-medium italic opacity-85 max-w-xl leading-relaxed">
+          <p className="text-on-surface-variant text-base md:text-lg font-medium italic opacity-85 max-w-xl leading-relaxed">
             To maintain the integrity of our digital clubhouse, please provide a high-resolution screenshot of your final scorecard. Our stewards will verify the results within 24 hours.
           </p>
         </div>
@@ -53,12 +53,12 @@ const WinnerVerification: React.FC = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white p-8 md:p-10 rounded-[2.5rem] border border-outline-variant/10 shadow-xl flex flex-col items-center text-center relative overflow-hidden group min-w-[300px]"
+          className="bg-white p-6 sm:p-8 md:p-10 rounded-[2rem] sm:rounded-[2.5rem] border border-outline-variant/10 shadow-xl flex flex-col items-center text-center relative overflow-hidden group w-full md:min-w-[300px] md:w-auto"
         >
-           <div className="w-12 h-12 bg-primary text-secondary rounded-full flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform">
+           <div className="w-12 h-12 bg-primary text-secondary rounded-full flex items-center justify-center mb-4 sm:mb-6 shadow-lg group-hover:scale-110 transition-transform">
               <CheckCircle2 size={24} />
            </div>
-           <p className="text-4xl font-black text-on-surface italic tracking-tighter mb-2">$4,250.00</p>
+           <p className="text-3xl sm:text-4xl font-black text-on-surface italic tracking-tighter mb-2">$4,250.00</p>
            <p className="text-[9px] font-black text-on-surface-variant uppercase tracking-widest opacity-80 italic">Pending Prize Disbursement</p>
            
            <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full -mr-12 -mt-12 blur-2xl"></div>
@@ -69,8 +69,8 @@ const WinnerVerification: React.FC = () => {
         {/* Left Column: Upload & Guidelines */}
         <div className="lg:col-span-7 space-y-8">
           {/* Upload Area */}
-          <div className="bg-white p-10 rounded-[3rem] border border-outline-variant/10 shadow-sm relative group overflow-hidden">
-             <div className="absolute inset-4 border-2 border-dashed border-outline-variant/20 rounded-[2rem] flex flex-col items-center justify-center p-8 text-center space-y-6">
+          <div className="bg-white p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] border border-outline-variant/10 shadow-sm relative group overflow-hidden">
+             <div className="absolute inset-4 border-2 border-dashed border-outline-variant/20 rounded-[1.5rem] sm:rounded-[2rem] flex flex-col items-center justify-center p-4 sm:p-8 text-center space-y-4 sm:space-y-6">
                 <AnimatePresence mode="wait">
                   {!selectedFile ? (
                     <motion.div 
@@ -78,16 +78,16 @@ const WinnerVerification: React.FC = () => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="space-y-6 flex flex-col items-center"
+                      className="space-y-4 sm:space-y-6 flex flex-col items-center"
                     >
-                       <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-                          <Upload size={32} />
+                       <div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                          <Upload size={24} className="sm:size-[32px]" />
                        </div>
                        <div>
-                          <h3 className="text-xl font-black italic uppercase tracking-tight text-on-surface mb-2">Drop your scorecard here</h3>
-                          <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest opacity-75 italic">PNG, JPG or PDF. Max 10MB.</p>
+                          <h3 className="text-lg sm:text-xl font-black italic uppercase tracking-tight text-on-surface mb-2">Drop scorecard here</h3>
+                          <p className="text-[9px] sm:text-[10px] font-bold text-on-surface-variant uppercase tracking-widest opacity-75 italic">PNG, JPG or PDF.</p>
                        </div>
-                       <label className="px-10 py-4 bg-on-surface text-white rounded-2xl font-black text-xs uppercase tracking-widest italic cursor-pointer hover:scale-105 transition-all shadow-xl active:scale-95">
+                       <label className="px-6 sm:px-10 py-3 sm:py-4 bg-on-surface text-white rounded-xl sm:rounded-2xl font-black text-[10px] sm:text-xs uppercase tracking-widest italic cursor-pointer hover:scale-105 transition-all shadow-xl active:scale-95">
                           Select File
                           <input type="file" className="hidden" accept="image/*,.pdf" onChange={handleFileChange} />
                        </label>
@@ -97,18 +97,18 @@ const WinnerVerification: React.FC = () => {
                       key="success"
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="space-y-6 flex flex-col items-center"
+                      className="space-y-4 sm:space-y-6 flex flex-col items-center"
                     >
-                       <div className="w-16 h-16 bg-primary text-secondary rounded-2xl flex items-center justify-center shadow-lg">
-                          <CheckCircle2 size={32} />
+                       <div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary text-secondary rounded-2xl flex items-center justify-center shadow-lg">
+                          <CheckCircle2 size={24} className="sm:size-[32px]" />
                        </div>
                        <div>
-                          <h3 className="text-xl font-black italic uppercase tracking-tight text-on-surface mb-2">{selectedFile.name}</h3>
-                          <p className="text-[10px] font-bold text-primary uppercase tracking-widest italic">Scorecard Captured Successfully</p>
+                          <h3 className="text-lg sm:text-xl font-black italic uppercase tracking-tight text-on-surface mb-2 truncate max-w-[200px]">{selectedFile.name}</h3>
+                          <p className="text-[9px] sm:text-[10px] font-bold text-primary uppercase tracking-widest italic">Captured Successfully</p>
                        </div>
                        <button 
                          onClick={removeFile}
-                         className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest italic underline underline-offset-4 decoration-outline-variant hover:text-primary transition-colors"
+                         className="text-[9px] sm:text-[10px] font-black text-on-surface-variant uppercase tracking-widest italic underline underline-offset-4 decoration-outline-variant hover:text-primary transition-colors"
                        >
                          Replace File
                        </button>
@@ -116,7 +116,7 @@ const WinnerVerification: React.FC = () => {
                   )}
                 </AnimatePresence>
              </div>
-             <div className="h-[400px]"></div>
+             <div className="h-[250px] sm:h-[400px]"></div>
           </div>
 
           {/* Submission Guidelines */}

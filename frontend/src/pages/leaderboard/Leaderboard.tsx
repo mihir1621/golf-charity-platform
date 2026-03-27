@@ -63,28 +63,28 @@ const Leaderboard: React.FC = () => {
   );
 
   if (loading) return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-[60vh]">
       <Loader2 className="animate-spin text-primary" size={48} />
     </div>
   );
 
   return (
-    <PageTransition className="p-6 lg:p-10 max-w-7xl mx-auto space-y-10">
+    <PageTransition className="px-6 lg:px-10 py-8 md:py-16 max-w-7xl mx-auto space-y-10 md:space-y-20 overflow-x-hidden">
       {/* Hero Header */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col lg:flex-row justify-between items-start gap-8"
+        className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8"
       >
-        <div className="space-y-4">
-          <span className="text-[9px] font-black bg-[#fed65b] text-[#002819] px-3 py-1.5 rounded-full uppercase tracking-[0.2em] inline-block italic">
-            Season Standings
+        <div className="space-y-4 md:space-y-6 flex-1 px-2">
+          <span className="text-[9px] font-black bg-[#fed65b] text-[#002819] px-4 py-2 rounded-full uppercase tracking-[0.2em] inline-block italic shadow-lg">
+            Season Live Standings
           </span>
-          <h1 className="text-5xl lg:text-6xl font-black text-[#002819] tracking-tight italic uppercase">
-            Global <span className="text-primary underline decoration-secondary/20 underline-offset-8">Leaders</span>
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-[#002819] tracking-tighter italic uppercase leading-none">
+            Global <span className="text-primary underline decoration-secondary/20 underline-offset-[12px]">Leaders.</span>
           </h1>
-          <p className="text-base text-on-surface-variant/80 font-medium leading-relaxed max-w-lg italic">
-            The standard of excellence is set here. Every round logged contributes to your standing in the clubhouse ecosystem.
+          <p className="text-sm md:text-xl text-on-surface-variant/80 font-medium leading-relaxed max-w-xl italic">
+            The standard of excellence is set here. Every round logged contributes to your standing in the global clubhouse hierarchy.
           </p>
         </div>
 
@@ -93,47 +93,50 @@ const Leaderboard: React.FC = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-[2rem] p-8 border border-black/[0.03] shadow-[0_20px_40px_rgba(0,0,0,0.04)] text-center min-w-[200px] group hover:bg-primary/5 transition-colors"
+          className="w-full lg:w-auto bg-white rounded-[2rem] md:rounded-[3rem] p-8 md:p-12 border border-black/[0.03] shadow-[0_20px_50px_rgba(0,0,0,0.04)] text-center lg:min-w-[280px] group transition-all"
         >
-          <span className="text-[9px] font-black text-[#c9a820] uppercase tracking-[0.25em] italic">Your Global Rank</span>
-          <p className="text-5xl font-black text-[#002819] tracking-tight mt-2 italic">#{myRank || '--'}</p>
+          <span className="text-[10px] md:text-xs font-black text-[#745c00] uppercase tracking-[0.3em] italic opacity-60">Your Global Rank</span>
+          <div className="flex items-center justify-center gap-4 mt-4">
+            <Trophy className="text-[#fed65b]" size={24} />
+            <p className="text-5xl md:text-7xl font-black text-[#002819] tracking-tighter italic leading-none">#{myRank || '--'}</p>
+          </div>
         </motion.div>
       </motion.div>
 
-      {/* Search Bar */}
-      <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center">
-        <div className="relative group flex-1 max-w-lg">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-on-surface-variant/30 group-focus-within:text-primary transition-colors" size={18} />
+      {/* Search Bar - Responsive */}
+      <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center px-2 md:px-0">
+        <div className="relative group flex-1 max-w-xl">
+          <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-on-surface-variant/20 group-focus-within:text-primary transition-colors" size={20} />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search golfers by name or club..."
-            className="w-full h-14 pl-13 pr-6 bg-white rounded-2xl border border-black/[0.06] text-sm font-medium focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all italic placeholder:text-on-surface-variant/70"
+            placeholder="Search golfers or clubs..."
+            className="w-full h-16 md:h-20 pl-16 pr-8 bg-white rounded-[1.5rem] md:rounded-[2.5rem] border border-black/[0.06] text-sm md:text-lg font-medium focus:ring-4 focus:ring-primary/5 focus:border-primary outline-none transition-all italic placeholder:text-on-surface-variant/30"
           />
         </div>
       </div>
 
-      {/* Leaderboard Table */}
+      {/* Leaderboard Table - Fully Responsive */}
       <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
-        className="bg-white rounded-[2.5rem] border border-black/[0.03] shadow-[0_20px_40px_rgba(0,0,0,0.03)] overflow-hidden"
+        className="bg-white rounded-[2.5rem] md:rounded-[4rem] border border-black/[0.03] shadow-[0_30px_60px_rgba(0,0,0,0.03)] overflow-hidden"
       >
-        {/* Table Header */}
-        <div className="grid grid-cols-12 gap-4 px-10 py-6 border-b border-black/[0.04] bg-[#fafafa]">
+        {/* Responsive Table Header */}
+        <div className="hidden md:grid grid-cols-12 gap-8 px-12 md:px-20 py-10 border-b border-black/[0.04] bg-[#fafafa]">
           <div className="col-span-1">
-            <span className="text-[9px] font-black text-on-surface-variant/70 uppercase tracking-[0.2em] italic">Rank</span>
+            <span className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] italic">Rank</span>
           </div>
-          <div className="col-span-4">
-            <span className="text-[9px] font-black text-on-surface-variant/80 uppercase tracking-[0.2em] italic">Player / Club</span>
+          <div className="col-span-5">
+            <span className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] italic">Golfer / Clubhouse</span>
           </div>
-          <div className="col-span-4">
-            <span className="text-[9px] font-black text-on-surface-variant/80 uppercase tracking-[0.2em] italic">Monthly points</span>
+          <div className="col-span-3">
+            <span className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] italic">Season Points</span>
           </div>
           <div className="col-span-3 text-right">
-            <span className="text-[9px] font-black text-on-surface-variant/80 uppercase tracking-[0.2em] italic">Avg / Round</span>
+            <span className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-[0.2em] italic">Performance Avg</span>
           </div>
         </div>
 
@@ -142,105 +145,114 @@ const Leaderboard: React.FC = () => {
           {filteredEntries.length > 0 ? filteredEntries.map((entry) => (
             <div
               key={entry.userId}
-              className={`grid grid-cols-12 gap-4 px-10 py-7 items-center transition-colors ${
+              className={`flex flex-col md:grid md:grid-cols-12 gap-4 md:gap-8 px-8 sm:px-12 md:px-20 py-8 md:py-12 items-center transition-all ${
                 entry.isYou
-                  ? 'bg-primary/[0.03] hover:bg-primary/[0.05]'
+                  ? 'bg-primary/[0.02] relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1.5 before:bg-primary'
                   : 'hover:bg-[#fafafa]'
               }`}
             >
-              {/* Rank */}
-              <div className="col-span-1 flex items-center gap-2">
-                <span className={`text-xl font-black tracking-tighter italic ${entry.rank <= 3 ? 'text-secondary' : 'text-[#002819]/80'}`}>
-                  {String(entry.rank).padStart(2, '0')}
-                </span>
-                {entry.rank === 1 && <Crown size={14} className="text-[#c9a820]" />}
+              {/* Rank - Mobile Centered */}
+              <div className="col-span-1 w-full md:w-auto flex items-center justify-between md:justify-start gap-4 mb-4 md:mb-0">
+                <div className="flex items-center gap-3">
+                  <span className={`text-3xl md:text-4xl font-black tracking-tighter italic ${entry.rank <= 3 ? 'text-[#fed65b]' : 'text-[#002819]/40'}`}>
+                    #{String(entry.rank).padStart(2, '0')}
+                  </span>
+                  {entry.rank === 1 && <Crown size={20} className="text-[#fed65b] animate-bounce" />}
+                </div>
+                {entry.isYou && (
+                  <span className="md:hidden bg-primary text-white text-[8px] font-black px-3 py-1 rounded-full uppercase italic tracking-widest">You</span>
+                )}
               </div>
 
-              {/* Player */}
-              <div className="col-span-4 flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-full overflow-hidden border-2 flex-shrink-0 bg-primary/5 ${entry.isYou ? 'border-primary' : 'border-black/5'}`}>
+              {/* Player - Mobile Top */}
+              <div className="col-span-5 w-full flex items-center gap-6">
+                <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl overflow-hidden border-2 flex-shrink-0 bg-primary/5 transition-transform group-hover:scale-105 ${entry.isYou ? 'border-primary' : 'border-black/5 shadow-sm'}`}>
                   <img src={entry.avatar} alt={entry.name} className="w-full h-full object-cover" />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className={`text-sm font-black italic uppercase tracking-tight ${entry.isYou ? 'text-primary' : 'text-[#002819]'}`}>
-                      {entry.name}
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-on-surface-variant/70 font-black uppercase italic tracking-widest">{entry.club}</span>
+                <div className="min-w-0 flex-1">
+                  <h3 className={`text-xl md:text-2xl font-black italic uppercase tracking-tighter truncate leading-tight ${entry.isYou ? 'text-primary underline decoration-primary/10' : 'text-[#002819]'}`}>
+                    {entry.name}
+                  </h3>
+                  <p className="text-[10px] md:text-sm text-on-surface-variant/40 font-black uppercase italic tracking-widest mt-1 truncate">{entry.club || 'Elite Clubhouse'}</p>
                 </div>
               </div>
 
-              {/* Points */}
-              <div className="col-span-4">
-                <span className={`text-lg font-black italic tracking-tighter ${entry.isYou ? 'text-primary' : 'text-[#002819]/70'}`}>
-                  {entry.totalPoints} PTS
-                </span>
+              {/* Points - Mobile Spaced */}
+              <div className="col-span-3 w-full flex md:block items-center justify-between mt-4 md:mt-0 p-4 md:p-0 bg-surface-container-low/30 md:bg-transparent rounded-2xl">
+                <span className="md:hidden text-[9px] font-black text-on-surface-variant/30 uppercase italic tracking-widest">Season Points</span>
+                <p className={`text-xl md:text-3xl font-black italic tracking-tighter leading-none ${entry.isYou ? 'text-primary' : 'text-[#002819]'}`}>
+                  {entry.totalPoints} <span className="text-[10px] md:text-xs opacity-40 uppercase ml-1">Pts</span>
+                </p>
               </div>
 
               {/* Avg Score */}
-              <div className="col-span-3 text-right">
-                <span className={`text-lg font-black italic tracking-tighter ${entry.isYou ? 'text-primary' : 'text-on-surface-variant/80'}`}>
+              <div className="col-span-3 w-full md:text-right flex md:block items-center justify-between p-4 md:p-0">
+                <span className="md:hidden text-[9px] font-black text-on-surface-variant/30 uppercase italic tracking-widest">Efficiency Rating</span>
+                <p className={`text-xl md:text-3xl font-black italic tracking-tighter leading-none ${entry.isYou ? 'text-primary' : 'text-on-surface-variant/80'}`}>
                   {entry.avgScore}
-                </span>
+                </p>
               </div>
             </div>
           )) : (
-            <div className="p-20 text-center text-on-surface-variant/80 italic font-medium">No results found matching your search.</div>
+            <div className="p-20 md:p-40 text-center space-y-6">
+              <Loader2 className="mx-auto text-primary/20 animate-spin" size={40} />
+              <p className="text-sm md:text-xl text-on-surface-variant/30 font-black uppercase italic tracking-[0.2em]">Synchronizing clubhouse leader data...</p>
+            </div>
           )}
         </div>
       </motion.div>
 
-      {/* Bottom Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        {/* Promotion Card */}
+      {/* Promotion Cards - Fully Responsive Stack */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 md:gap-14 px-2 md:px-0">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="lg:col-span-3 bg-[#002819] rounded-[3rem] p-10 lg:p-14 text-white relative overflow-hidden group border border-primary/20"
+          className="lg:col-span-3 bg-[#002819] rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-16 text-white relative overflow-hidden group shadow-2xl"
         >
-          <div className="relative z-10 space-y-6 max-w-md">
-            <h3 className="text-3xl font-black text-[#fed65b] italic tracking-tighter uppercase">
-              Clubhouse Invitations
+          <div className="relative z-10 space-y-6 md:space-y-10 max-w-lg">
+            <h3 className="text-3xl md:text-5xl font-black text-[#fed65b] italic tracking-tighter uppercase leading-none">
+              Season Final <br /> Invitations.
             </h3>
-            <p className="text-base text-white/85 font-medium italic leading-relaxed">
-              Top 10 golfers on the Global Leaderboard at the end of every quarter earn an all-expenses-paid trip to our Season Final at Pebble Beach.
+            <p className="text-sm md:text-lg text-white/50 font-medium italic leading-relaxed">
+              Top 10 golfers earn an exclusive, all-expenses-paid trip to our Season Final at St. Andrews. Secure your spot in the history of the fund.
             </p>
             <button
               onClick={() => navigate('/subscribe')}
-              className="px-8 py-4 bg-[#fed65b] text-[#002819] rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl italic"
+              className="w-full sm:w-auto px-10 md:px-14 py-4 md:py-6 bg-[#fed65b] text-[#002819] rounded-xl md:rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl italic"
             >
-              Boost Your Ranking
+              Elevate Your Ranking
             </button>
           </div>
-          <Trophy className="absolute -bottom-10 -right-10 text-white/[0.05] w-64 h-64 rotate-12 group-hover:rotate-0 transition-transform duration-1000" />
+          <Trophy className="absolute -bottom-20 -right-20 text-white/[0.03] w-64 h-64 md:w-96 md:h-96 rotate-12 group-hover:rotate-0 transition-all duration-1000" />
         </motion.div>
 
-        {/* Global Impact Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="lg:col-span-2 bg-white rounded-[3rem] p-10 lg:p-14 border border-black/[0.03] shadow-[0_15px_30px_rgba(0,0,0,0.03)] flex flex-col justify-between"
+          className="lg:col-span-2 bg-white rounded-[2.5rem] md:rounded-[4rem] p-8 md:p-16 border border-black/[0.03] shadow-[0_20px_50px_rgba(0,0,0,0.03)] flex flex-col justify-between"
         >
-          <div className="w-14 h-14 bg-primary/5 rounded-2xl flex items-center justify-center mb-6">
-            <Users size={28} className="text-primary" />
+          <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/5 rounded-[1.5rem] md:rounded-[2rem] flex items-center justify-center mb-8">
+            <Users size={32} className="text-primary" />
           </div>
           <div>
-            <h4 className="text-xl font-black text-[#002819] tracking-tighter uppercase italic mb-1">Global Community</h4>
-            <div className="flex items-baseline gap-3 mt-4">
-               <p className="text-5xl font-black text-primary italic tracking-tighter">{entries.length}</p>
-               <span className="text-[10px] font-black text-on-surface-variant/80 uppercase italic tracking-widest">Active Golfers</span>
+            <h4 className="text-xl md:text-2xl font-black text-[#002819] tracking-tighter uppercase italic leading-none">Active <br /> Community</h4>
+            <div className="flex items-baseline gap-4 mt-6">
+               <p className="text-5xl md:text-7xl font-black text-primary italic tracking-tighter leading-none">{entries.length}</p>
+               <span className="text-[10px] md:text-xs font-black text-on-surface-variant/40 uppercase italic tracking-widest leading-none">Global Members</span>
             </div>
-            <p className="text-[11px] text-secondary font-black uppercase italic tracking-widest mt-4">+12% growth since last draw</p>
+            <p className="text-[10px] text-secondary font-black uppercase italic tracking-[0.2em] mt-8 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+              Live Growth Sync Active
+            </p>
           </div>
         </motion.div>
       </div>
       
-      <div className="text-center pb-8 opacity-85 text-[9px] font-black uppercase tracking-[0.4em] italic">
-         © 2026 Clubhouse. Global Standings Terminal.
+      <div className="text-center pb-8 opacity-20 text-[9px] md:text-[10px] font-black uppercase tracking-[0.5em] italic">
+         Official Standings Terminal 4.0 // Clubhouse Ecosystem
       </div>
     </PageTransition>
   );
