@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
-import axios from 'axios';
+import apiClient from '../../api/apiClient';
 import { motion } from 'framer-motion';
 import { 
   Loader2, 
@@ -59,8 +59,7 @@ const Signup: React.FC = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const { user } = result;
 
-      const apiUrl = import.meta.env.VITE_API_URL;
-      await axios.post(`${apiUrl}/auth/social-sync`, {
+      await apiClient.post(`/auth/social-sync`, {
         uid: user.uid,
         email: user.email,
         displayName: user.displayName,
@@ -85,8 +84,7 @@ const Signup: React.FC = () => {
         throw new Error('Please select a charity to support.');
       }
 
-      const apiUrl = import.meta.env.VITE_API_URL;
-      await axios.post(`${apiUrl}/auth/signup`, formData);
+      await apiClient.post(`/auth/signup`, formData);
       await signInWithEmailAndPassword(auth, formData.email, formData.password);
       navigate('/dashboard');
     } catch (err: any) {

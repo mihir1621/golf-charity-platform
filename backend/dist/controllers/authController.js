@@ -48,16 +48,50 @@ export const signup = async (req, res) => {
         res.status(500).json({ error: error.message || 'Error occurred during signup' });
     }
 };
-// POST /api/auth/login
-export const login = async (req, res) => {
-    // Wait, typically login is handled by the Client SDK returning a JWT Token.
-    // We document that this endpoint exchange could be handled on client
-    // But to satisfy the REST API requirement, we can provide a stub or documentation 
-    // that login is fully offloaded to the Firebase Client SDK.
-    // We can return a specific response guiding the client on how to pass the token.
-    res.status(200).json({
-        message: 'Login should be performed on the client-side using Firebase Client SDK. Once authenticated, pass the Firebase ID token in the Authorization header as a Bearer token to protect routes.',
-        note: 'In a true backend-first architecture, you would call https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY] here'
-    });
+// POST /api/auth/social-sync (Google/Social Login)
+export const socialSync = async (req, res) => {
+    try {
+        const { uid, email, displayName } = req.body;
+        if (!uid || !email) {
+            res.status(400).json({ error: 'Missing uid or email for synchronization' });
+            return;
+        }
+        // Check if user already exists
+        const userDocRef = db.collection('users').doc(uid);
+        const userSnapshot = await userDocRef.get();
+        if (userSnapshot.exists) {
+            res.status(200).json({ message: 'User already synchronized', user: userSnapshot.data() });
+            return;
+        }
+        // Create new user record for social login
+        // 1. Create Stripe Customer
+        const customer = await stripe.customers.create({
+            email,
+            name: displayName || 'Valued Member',
+            metadata: { uid }
+        });
+        // 2. Save to Firestore with defaults
+        const userDoc = {
+            uid,
+            email,
+            displayName: displayName || 'Valued Member',
+            charityId: 'global-impact-fund', // Default fallback
+            charityContributionPercent: 10, // Default fallback
+            subscriptionStatus: 'expired',
+            stripeCustomerId: customer.id,
+            role: 'user',
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+        await userDocRef.set(userDoc);
+        res.status(201).json({
+            message: 'Social user synchronized successfully',
+            user: userDoc
+        });
+    }
+    catch (error) {
+        console.error('Social sync error:', error);
+        res.status(500).json({ error: error.message || 'Error occurred during social synchronization' });
+    }
 };
 //# sourceMappingURL=authController.js.map

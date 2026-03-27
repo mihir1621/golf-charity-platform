@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext';
-import axios from 'axios';
+import apiClient from '../../api/apiClient';
 import { motion } from 'framer-motion';
 import { 
   Loader2, 
@@ -57,8 +57,7 @@ const Login: React.FC = () => {
       const result = await signInWithPopup(auth, googleProvider);
       const { user } = result;
 
-      const apiUrl = import.meta.env.VITE_API_URL;
-      await axios.post(`${apiUrl}/auth/social-sync`, {
+      await apiClient.post(`/auth/social-sync`, {
         uid: user.uid,
         email: user.email,
         displayName: user.displayName,
