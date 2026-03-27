@@ -14,7 +14,12 @@ import notificationRoutes from './routes/notificationRoutes.js';
 import perkRoutes from './routes/perkRoutes.js';
 dotenv.config();
 const app = express();
-app.use(cors());
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+app.use(cors({
+    origin: [FRONTEND_URL, 'https://golf-charity-platform-frontend.vercel.app'], // Add your final prod URL here
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 // Webhook route - must be before express.json() to get raw body
 app.use('/api/webhook/stripe', express.raw({ type: 'application/json' }), subscriptionRoutes);
 // General middleware

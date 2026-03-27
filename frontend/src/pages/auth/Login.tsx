@@ -158,7 +158,7 @@ const Login: React.FC = () => {
                   <div className="space-y-4">
                      <div className="flex justify-between items-center ml-2">
                         <label className="text-[10px] font-black text-on-surface-variant/40 uppercase tracking-[0.3em] italic">Access Key</label>
-                        <Link to="/forgot-password" size="sm" className="text-[9px] font-black text-primary uppercase tracking-widest hover:underline italic">Recovery Required?</Link>
+                        <Link to="/forgot-password" className="text-[9px] font-black text-primary uppercase tracking-widest hover:underline italic">Recovery Required?</Link>
                      </div>
                      <div className="relative group">
                         <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-on-surface-variant/20 group-focus-within:text-primary transition-all shadow-sm" size={20} />
